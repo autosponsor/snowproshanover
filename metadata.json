@@ -1,0 +1,7 @@
+{
+  "name": "Snow Pros - Hanover Snow Removal",
+  "description": "A high-end, reliable snow removal service landing page for Hanover, ON, featuring glassmorphism design, real-time form validation, and immersive animations.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}

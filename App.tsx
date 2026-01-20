@@ -185,7 +185,7 @@ const App: React.FC = () => {
               className="fixed top-0 left-0 right-0 z-[100] bg-brand text-white p-4 flex items-center justify-center gap-3 shadow-2xl"
             >
               <WifiOff size={20} className="animate-pulse" />
-              <span className="text-sm font-bold tracking-wide">YOU ARE OFFLINE. CALL FOR URGENT SERVICE: <a href="tel:6474500225" className="underline font-black">(647) 450-0225</a></span>
+              <span className="text-sm font-bold tracking-wide text-center">YOU ARE OFFLINE. CALL FOR URGENT SERVICE: <a href="tel:6474500225" className="underline font-black">(647) 450-0225</a></span>
             </motion.div>
           )}
         </AnimatePresence>
@@ -193,15 +193,15 @@ const App: React.FC = () => {
         {/* Navigation */}
         <nav className={cn(
           "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
-          scrolled ? "glass-dark py-3 translate-y-0 shadow-lg" : "bg-transparent py-8"
+          scrolled ? "glass-dark py-3 translate-y-0 shadow-lg" : "bg-transparent py-6 md:py-8"
         )}>
           <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
-            <div className="flex items-center gap-3 group cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+            <div className="flex items-center gap-2 md:gap-3 group cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
               <Snowflake className={cn(
                 "transition-all duration-500 group-hover:rotate-180",
                 scrolled ? "text-brand" : "text-white"
-              )} size={32} />
-              <span className="font-display text-2xl font-bold tracking-tighter text-white">
+              )} size={28} />
+              <span className="font-display text-xl md:text-2xl font-bold tracking-tighter text-white">
                 SNOW<span className="text-brand">PROS</span>
               </span>
             </div>
@@ -228,11 +228,11 @@ const App: React.FC = () => {
             </div>
 
             <button 
-              className="md:hidden p-3 rounded-xl glass text-white"
+              className="md:hidden p-2 rounded-xl glass text-white"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               aria-label="Toggle Menu"
             >
-              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
           </div>
         </nav>
@@ -251,24 +251,24 @@ const App: React.FC = () => {
                 animate={{ x: 0 }}
                 exit={{ x: '100%' }}
                 transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                className="absolute right-0 top-0 bottom-0 w-4/5 bg-navy-900 p-10 flex flex-col justify-center"
+                className="absolute right-0 top-0 bottom-0 w-full md:w-4/5 bg-navy-900 p-10 flex flex-col justify-center"
               >
-                <div className="flex flex-col gap-10">
+                <div className="flex flex-col gap-8 md:gap-10">
                   {['Services', 'Gallery', 'About', 'Contact'].map((item) => (
                     <a 
                       key={item} 
                       href={`#${item.toLowerCase()}`}
                       onClick={() => setIsMenuOpen(false)}
-                      className="text-4xl font-display font-bold text-white hover:text-brand transition-colors tracking-tight"
+                      className="text-3xl md:text-4xl font-display font-bold text-white hover:text-brand transition-colors tracking-tight"
                     >
                       {item}
                     </a>
                   ))}
                   <div className="h-px bg-white/10 w-full my-4" />
                   <a href="tel:6474500225" className="flex flex-col gap-2">
-                    <span className="text-xs uppercase tracking-[0.3em] text-white/50">Emergency Line</span>
-                    <span className="text-2xl font-bold text-brand flex items-center gap-3">
-                      <Phone size={24} /> (647) 450-0225
+                    <span className="text-[10px] uppercase tracking-[0.3em] text-white/50">Emergency Line</span>
+                    <span className="text-xl md:text-2xl font-bold text-brand flex items-center gap-3">
+                      <Phone size={20} /> (647) 450-0225
                     </span>
                   </a>
                 </div>
@@ -280,10 +280,10 @@ const App: React.FC = () => {
         <main>
           <Hero />
           
-          <section id="services" className="py-32 px-6 bg-snow-50 relative overflow-hidden">
+          <section id="services" className="py-20 md:py-32 px-6 bg-snow-50 relative overflow-hidden">
             <div className="absolute -top-24 -left-24 w-96 h-96 bg-brand/5 rounded-full blur-3xl" />
             <div className="max-w-7xl mx-auto relative z-10">
-              <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
+              <div className="flex flex-col md:flex-row justify-between items-end mb-12 md:mb-20 gap-8">
                 <div className="max-w-2xl">
                   <motion.span 
                     initial={{ opacity: 0, x: -20 }}
@@ -299,11 +299,11 @@ const App: React.FC = () => {
                   >
                     Complete Winter <br/><span className="text-brand">Protection.</span>
                   </motion.h2>
-                  <p className="text-slate-500 mt-4 font-bold uppercase tracking-widest text-xs">Exclusively serving Hanover, ON with industrial-grade reliability.</p>
+                  <p className="text-slate-500 mt-4 font-bold uppercase tracking-widest text-[10px] md:text-xs">Exclusively serving Hanover, ON with industrial-grade reliability.</p>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
                 {[
                   { icon: <Truck className="text-brand" />, title: 'Residential Plowing', desc: 'Prompt driveway clearing within 4 hours of snow completion. We prioritize Hanover Heights and local neighborhoods.' },
                   { icon: <Clock className="text-brand" />, title: 'Emergency Response', desc: '24/7 Service. Our Crew is ready 24/7 to prioritize your driveway in case of emergencies with timely service.' },
@@ -314,12 +314,12 @@ const App: React.FC = () => {
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.1 }}
-                    className="bg-white p-10 rounded-[2.5rem] border border-snow-100 shadow-sm hover:shadow-2xl transition-all group relative overflow-hidden"
+                    className="bg-white p-8 md:p-10 rounded-[2rem] md:rounded-[2.5rem] border border-snow-100 shadow-sm hover:shadow-2xl transition-all group relative overflow-hidden"
                   >
-                    <div className="w-16 h-16 bg-snow-50 rounded-2xl flex items-center justify-center mb-8 relative z-10">
+                    <div className="w-14 h-14 md:w-16 md:h-16 bg-snow-50 rounded-2xl flex items-center justify-center mb-6 md:mb-8 relative z-10">
                       {service.icon}
                     </div>
-                    <h3 className="text-2xl font-display font-bold mb-4 tracking-tight">{service.title}</h3>
+                    <h3 className="text-xl md:text-2xl font-display font-bold mb-3 md:mb-4 tracking-tight">{service.title}</h3>
                     <p className="text-slate-500 leading-relaxed text-sm md:text-base">{service.desc}</p>
                   </motion.div>
                 ))}
@@ -330,40 +330,40 @@ const App: React.FC = () => {
           <Gallery />
 
           {/* New "How it Works" Process Section */}
-          <section id="process" className="py-32 px-6 bg-white relative overflow-hidden">
+          <section id="process" className="py-20 md:py-32 px-6 bg-white relative overflow-hidden">
             <div className="max-w-7xl mx-auto relative z-10">
-              <div className="text-center mb-20">
+              <div className="text-center mb-12 md:mb-20">
                 <span className="text-brand font-black tracking-[0.4em] uppercase text-[10px]">Simple & Transparent</span>
-                <h2 className="text-4xl md:text-6xl font-display font-bold mt-4">The Snow Pros <span className="text-brand">Process.</span></h2>
+                <h2 className="text-3xl md:text-6xl font-display font-bold mt-4">The Snow Pros <span className="text-brand">Process.</span></h2>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-4">
                 {[
-                  { icon: <ClipboardList />, step: "01", title: "Request Quote", desc: "Use our form or call us to get a tailored estimate for your Hanover property." },
-                  { icon: <SnowIcon />, step: "02", title: "Snow Event", desc: "Our team monitors Hanover weather 24/7. When snow hits 2 inches, we dispatch." },
-                  { icon: <Camera />, step: "03", title: "Precision Clear", desc: "Driveway is cleared using commercial gear. We take before and after photos." },
-                  { icon: <UserCheck />, step: "04", title: "Verify & Pay", desc: "Review the work. Payment is only processed after your absolute satisfaction." }
+                  { icon: <ClipboardList size={20} />, step: "01", title: "Request Quote", desc: "Use our form or call us to get a estimate for your Hanover property." },
+                  { icon: <SnowIcon size={20} />, step: "02", title: "Snow Event", desc: "Our team monitors Hanover weather 24/7. When snow hits, we dispatch." },
+                  { icon: <Camera size={20} />, step: "03", title: "Precision Clear", desc: "Driveway is cleared professionally. We take before and after photos." },
+                  { icon: <UserCheck size={20} />, step: "04", title: "Verify & Pay", desc: "Review the work. Payment is processed after your absolute satisfaction." }
                 ].map((item, i) => (
                   <motion.div 
                     key={i}
                     initial={{ opacity: 0, scale: 0.95 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
-                    className="relative p-10 rounded-[2.5rem] bg-snow-50 border border-snow-100 flex flex-col items-center text-center group hover:bg-navy-900 transition-all duration-500"
+                    className="relative p-8 md:p-10 rounded-[2rem] md:rounded-[2.5rem] bg-snow-50 border border-snow-100 flex flex-col items-center text-center group hover:bg-navy-900 transition-all duration-500"
                   >
-                    <div className="text-brand mb-6 bg-white p-4 rounded-2xl shadow-sm group-hover:bg-brand group-hover:text-white transition-colors">
+                    <div className="text-brand mb-4 md:mb-6 bg-white p-3 md:p-4 rounded-2xl shadow-sm group-hover:bg-brand group-hover:text-white transition-colors">
                       {item.icon}
                     </div>
-                    <span className="text-xs font-black text-brand tracking-widest mb-2">{item.step}</span>
-                    <h3 className="text-xl font-display font-bold mb-4 group-hover:text-white">{item.title}</h3>
-                    <p className="text-slate-500 text-sm leading-relaxed group-hover:text-snow-100/60">{item.desc}</p>
+                    <span className="text-[10px] font-black text-brand tracking-widest mb-2">{item.step}</span>
+                    <h3 className="text-lg md:text-xl font-display font-bold mb-3 md:mb-4 group-hover:text-white">{item.title}</h3>
+                    <p className="text-slate-500 text-xs md:text-sm leading-relaxed group-hover:text-snow-100/60">{item.desc}</p>
                   </motion.div>
                 ))}
               </div>
             </div>
           </section>
 
-          <section id="contact" className="py-32 px-6 relative overflow-hidden min-h-[800px] flex items-center">
+          <section id="contact" className="py-20 md:py-32 px-6 relative overflow-hidden min-h-[800px] flex items-center">
             <div className="absolute inset-0 z-0">
               <img 
                 src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhr4B7bqtVPOISaADTYGY2uBQ49_74EoXTA_biLE0EKZvx8SETuqNpHk15EGik8EuLGGBz6OFIqptKOrqFWIg8xEhczItE1Fv_fCrnCaC_ETaQybyMZS471-yAUDeaSjBUJcnxhOJcf5oee2tT3j7zghrytRUCoQydmd1PM3_GF1ejKYPnERBO9by5ZkHCt/s1320/614255840_888667230334505_5132184906097328970_n.png" 
@@ -373,31 +373,31 @@ const App: React.FC = () => {
               <div className="absolute inset-0 bg-navy-950/80 backdrop-blur-sm" />
             </div>
 
-            <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center relative z-20 w-full">
+            <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 md:gap-20 items-center relative z-20 w-full">
               <div>
                 <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }}>
-                  <span className="text-brand font-black tracking-[0.4em] uppercase text-[10px] mb-6 block">Ready for the storm</span>
-                  <h2 className="text-5xl md:text-7xl font-display font-bold text-white mb-10 leading-[0.9]">
+                  <span className="text-brand font-black tracking-[0.4em] uppercase text-[10px] mb-4 md:mb-6 block">Ready for the storm</span>
+                  <h2 className="text-4xl md:text-7xl font-display font-bold text-white mb-8 md:mb-10 leading-[0.9]">
                     Let Us Clear <br/><span className="text-ice">The Path.</span>
                   </h2>
                 </motion.div>
-                <div className="space-y-8">
-                  <div className="flex items-center gap-6 group">
-                    <div className="w-14 h-14 glass rounded-2xl flex items-center justify-center border border-white/10">
-                      <Phone size={24} className="text-brand" />
+                <div className="space-y-6 md:space-y-8">
+                  <div className="flex items-center gap-5 md:gap-6 group">
+                    <div className="w-12 h-12 md:w-14 md:h-14 glass rounded-2xl flex items-center justify-center border border-white/10">
+                      <Phone size={20} className="text-brand" />
                     </div>
                     <div>
-                      <p className="text-xs font-bold text-white/40 uppercase tracking-widest mb-1">Direct Line</p>
-                      <a href="tel:6474500225" className="text-2xl font-display font-bold text-white hover:text-brand transition-colors">(647) 450-0225</a>
+                      <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-1">Direct Line</p>
+                      <a href="tel:6474500225" className="text-xl md:text-2xl font-display font-bold text-white hover:text-brand transition-colors tracking-tight">(647) 450-0225</a>
                     </div>
                   </div>
-                  <div className="flex items-center gap-6 group">
-                    <div className="w-14 h-14 glass rounded-2xl flex items-center justify-center border border-white/10">
-                      <Mail size={24} className="text-brand" />
+                  <div className="flex items-center gap-5 md:gap-6 group">
+                    <div className="w-12 h-12 md:w-14 md:h-14 glass rounded-2xl flex items-center justify-center border border-white/10">
+                      <Mail size={20} className="text-brand" />
                     </div>
                     <div>
-                      <p className="text-xs font-bold text-white/40 uppercase tracking-widest mb-1">Email Dispatch</p>
-                      <a href="mailto:matthew.s.danielson@gmail.com" className="text-lg font-display font-bold text-white hover:text-brand transition-colors break-all">matthew.s.danielson@gmail.com</a>
+                      <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-1">Email Dispatch</p>
+                      <a href="mailto:matthew.s.danielson@gmail.com" className="text-base md:text-lg font-display font-bold text-white hover:text-brand transition-colors break-all tracking-tight">matthew.s.danielson@gmail.com</a>
                     </div>
                   </div>
                 </div>
@@ -407,13 +407,13 @@ const App: React.FC = () => {
           </section>
         </main>
 
-        <footer className="bg-navy-950 py-20 px-6 border-t border-white/5 relative z-10">
+        <footer className="bg-navy-950 py-16 md:py-20 px-6 border-t border-white/5 relative z-10">
           <div className="max-w-7xl mx-auto">
             <div className="flex flex-col md:flex-row justify-between items-start gap-12 mb-16">
               <div className="flex flex-col gap-4">
                 <div className="flex items-center gap-2">
-                  <Snowflake className="text-brand" size={28} />
-                  <span className="font-display text-2xl font-bold text-white tracking-tighter">
+                  <Snowflake className="text-brand" size={24} />
+                  <span className="font-display text-xl md:text-2xl font-bold text-white tracking-tighter">
                     SNOW<span className="text-brand">PROS</span>
                   </span>
                 </div>
@@ -431,23 +431,12 @@ const App: React.FC = () => {
               </div>
             </div>
             <div className="h-px bg-white/5 w-full mb-8" />
-            <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-snow-100/20 text-[10px] uppercase font-bold tracking-[0.2em]">
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-snow-100/20 text-[10px] uppercase font-bold tracking-[0.2em] text-center">
               <p>© 2024 Snow Pros Hanover. Fully Insured & WSIB Compliant.</p>
               <p>Designed for the Hanover Winter.</p>
             </div>
           </div>
         </footer>
-
-        <div className="md:hidden fixed bottom-8 left-6 right-6 z-50">
-          <motion.a 
-            whileTap={{ scale: 0.95 }}
-            href="tel:6474500225"
-            className="flex items-center justify-center gap-4 w-full bg-brand py-5 rounded-[1.5rem] text-white font-black text-sm uppercase tracking-widest shadow-2xl"
-          >
-            <Phone size={16} />
-            Emergency Dispatch
-          </motion.a>
-        </div>
       </div>
     </ErrorBoundary>
   );

@@ -14,8 +14,10 @@ import {
   Camera,
   CircleDollarSign,
   ReceiptText,
-  CreditCard,
-  Wallet
+  Wallet,
+  ClipboardList,
+  UserCheck,
+  Snowflake as SnowIcon
 } from 'lucide-react';
 import { Hero } from './features/landing/Hero';
 import { Gallery } from './features/gallery/Gallery';
@@ -23,16 +25,139 @@ import { ContactForm } from './features/contact/ContactForm';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { cn } from './lib/utils';
 
+const CookieConsent: React.FC = () => {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const consent = localStorage.getItem('snow-pros-consent');
+    if (!consent) {
+      const timer = setTimeout(() => setIsVisible(true), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
+  const accept = () => {
+    localStorage.setItem('snow-pros-consent', 'true');
+    setIsVisible(false);
+  };
+
+  return (
+    <AnimatePresence>
+      {isVisible && (
+        <motion.div
+          initial={{ y: 100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: 100, opacity: 0 }}
+          className="fixed bottom-6 left-6 right-6 md:left-auto md:right-6 md:w-96 z-[60] glass-dark p-6 rounded-[2rem] shadow-2xl border border-white/10"
+        >
+          <div className="flex items-start gap-4">
+            <div className="bg-brand/20 p-2 rounded-xl">
+              <SnowIcon size={20} className="text-brand" />
+            </div>
+            <div className="flex-1">
+              <h4 className="text-white font-display font-bold text-sm uppercase tracking-widest mb-2">Cookie Policy</h4>
+              <p className="text-snow-100/60 text-xs leading-relaxed mb-4">
+                We use cookies to ensure you get the best experience on our site and to analyze our traffic in Hanover.
+              </p>
+              <div className="flex gap-3">
+                <button 
+                  onClick={accept}
+                  className="flex-1 bg-brand hover:bg-brand-hover text-white text-[10px] font-black uppercase tracking-widest py-3 rounded-xl transition-all"
+                >
+                  Accept All
+                </button>
+                <button 
+                  onClick={() => setIsVisible(false)}
+                  className="px-4 text-snow-100/40 text-[10px] font-bold uppercase tracking-widest hover:text-white transition-colors"
+                >
+                  Decline
+                </button>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
+
+const PrivacyModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[100] bg-navy-950/95 backdrop-blur-xl flex items-center justify-center p-6"
+          onClick={onClose}
+        >
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            className="glass max-w-2xl w-full max-h-[80vh] overflow-y-auto p-10 rounded-[3rem] border border-white/10"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex justify-between items-center mb-8">
+              <h2 className="text-3xl font-display font-bold text-white tracking-tight">Privacy <span className="text-brand">Policy</span></h2>
+              <button onClick={onClose} className="p-2 glass rounded-full text-white hover:text-brand">
+                <X size={24} />
+              </button>
+            </div>
+            <div className="space-y-6 text-snow-100/70 text-sm leading-relaxed">
+              <p>At Snow Pros Hanover, we respect your privacy. This policy outlines how we handle the information you provide when requesting a quote.</p>
+              <h4 className="text-white font-bold uppercase tracking-widest text-xs">1. Data Collection</h4>
+              <p>We collect your name, phone number, and Hanover address solely for the purpose of providing snow removal services. We do not sell or share this data with third parties.</p>
+              <h4 className="text-white font-bold uppercase tracking-widest text-xs">2. Photo Documentation</h4>
+              <p>As part of our Precision Guarantee, we take photos of work completed. These are stored securely and used only for quality verification and billing disputes.</p>
+              <h4 className="text-white font-bold uppercase tracking-widest text-xs">3. Your Rights</h4>
+              <p>You can request to have your contact information removed from our dispatch records at any time after service completion by emailing our office.</p>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
+
 const App: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
   const [scrolled, setScrolled] = useState(false);
+  const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
 
+  // Dynamic SEO Effect
   useEffect(() => {
     const handleOnline = () => setIsOffline(false);
     const handleOffline = () => setIsOffline(true);
     const handleScroll = () => setScrolled(window.scrollY > 50);
 
+    const updateDynamicSEO = async () => {
+      try {
+        const response = await fetch(
+          `https://api.weatherapi.com/v1/current.json?key=432e73bbfd1d41b7b1841248261901&q=Hanover Ontario`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          const condition = data.current.condition.text.toLowerCase();
+          const isSnowing = condition.includes('snow') || condition.includes('ice') || condition.includes('blizzard');
+          
+          const metaDesc = document.querySelector('meta[name="description"]');
+          if (isSnowing) {
+            document.title = "⚠️ EMERGENCY Snow Removal Hanover | Crews Dispatching | Snow Pros";
+            if (metaDesc) metaDesc.setAttribute('content', 'SNOW ALERT HANOVER: Emergency plowing crews are active now. Priority residential driveway clearing within 4 hours. Call (647) 450-0225 for immediate service.');
+          } else {
+            document.title = "Top-Rated Snow Removal Hanover ON | Professional Plowing & Salting";
+            if (metaDesc) metaDesc.setAttribute('content', 'Hanover Ontario\'s #1 reliable snow removal service. Residential and commercial plowing, salting, and 24/7 winter maintenance. Request your seasonal quote today.');
+          }
+        }
+      } catch (e) {
+        console.error("SEO weather update failed", e);
+      }
+    };
+
+    updateDynamicSEO();
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
     window.addEventListener('scroll', handleScroll);
@@ -47,6 +172,9 @@ const App: React.FC = () => {
   return (
     <ErrorBoundary>
       <div className="relative font-sans text-navy-900 bg-snow-50 selection:bg-brand selection:text-white">
+        <CookieConsent />
+        <PrivacyModal isOpen={isPrivacyOpen} onClose={() => setIsPrivacyOpen(false)} />
+
         {/* Offline Banner */}
         <AnimatePresence>
           {isOffline && (
@@ -78,7 +206,6 @@ const App: React.FC = () => {
               </span>
             </div>
 
-            {/* Desktop Nav */}
             <div className="hidden md:flex items-center gap-10">
               {['Services', 'Gallery', 'About', 'Contact'].map((item) => (
                 <a 
@@ -100,7 +227,6 @@ const App: React.FC = () => {
               </a>
             </div>
 
-            {/* Mobile Menu Toggle */}
             <button 
               className="md:hidden p-3 rounded-xl glass text-white"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -139,22 +265,10 @@ const App: React.FC = () => {
                     </a>
                   ))}
                   <div className="h-px bg-white/10 w-full my-4" />
-                  <a 
-                    href="tel:6474500225"
-                    className="flex flex-col gap-2"
-                  >
+                  <a href="tel:6474500225" className="flex flex-col gap-2">
                     <span className="text-xs uppercase tracking-[0.3em] text-white/50">Emergency Line</span>
                     <span className="text-2xl font-bold text-brand flex items-center gap-3">
                       <Phone size={24} /> (647) 450-0225
-                    </span>
-                  </a>
-                  <a 
-                    href="mailto:matthew.s.danielson@gmail.com"
-                    className="flex flex-col gap-2"
-                  >
-                    <span className="text-xs uppercase tracking-[0.3em] text-white/50">Inquiries</span>
-                    <span className="text-sm font-bold text-snow-200 flex items-center gap-3">
-                      <Mail size={18} /> matthew.s.danielson@gmail.com
                     </span>
                   </a>
                 </div>
@@ -166,11 +280,8 @@ const App: React.FC = () => {
         <main>
           <Hero />
           
-          {/* Features Section */}
           <section id="services" className="py-32 px-6 bg-snow-50 relative overflow-hidden">
-            {/* Subtle Gradient decoration */}
             <div className="absolute -top-24 -left-24 w-96 h-96 bg-brand/5 rounded-full blur-3xl" />
-            
             <div className="max-w-7xl mx-auto relative z-10">
               <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
                 <div className="max-w-2xl">
@@ -188,37 +299,23 @@ const App: React.FC = () => {
                   >
                     Complete Winter <br/><span className="text-brand">Protection.</span>
                   </motion.h2>
+                  <p className="text-slate-500 mt-4 font-bold uppercase tracking-widest text-xs">Exclusively serving Hanover, ON with industrial-grade reliability.</p>
                 </div>
-                <div className="hidden lg:block w-32 h-1 bg-snow-200 mb-4" />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {[
-                  { 
-                    icon: <Truck className="text-brand" />, 
-                    title: 'Residential Plowing', 
-                    desc: 'Prompt driveway clearing within 4 hours of snow completion. We prioritize Hanover Heights and local neighborhoods.' 
-                  },
-                  { 
-                    icon: <Clock className="text-brand" />, 
-                    title: 'Emergency Response', 
-                    desc: '24/7 Service. Our Crew is ready 24/7 to prioritize your driveway in case of emergencies with timely service.' 
-                  },
-                  { 
-                    icon: <ShieldCheck className="text-brand" />, 
-                    title: 'Salting & Traction', 
-                    desc: 'Premium ice management using concrete-safe and pet-friendly melting agents for walkways and stairs.' 
-                  }
+                  { icon: <Truck className="text-brand" />, title: 'Residential Plowing', desc: 'Prompt driveway clearing within 4 hours of snow completion. We prioritize Hanover Heights and local neighborhoods.' },
+                  { icon: <Clock className="text-brand" />, title: 'Emergency Response', desc: '24/7 Service. Our Crew is ready 24/7 to prioritize your driveway in case of emergencies with timely service.' },
+                  { icon: <ShieldCheck className="text-brand" />, title: 'Salting & Traction', desc: 'Premium ice management using concrete-safe and pet-friendly melting agents for walkways and stairs.' }
                 ].map((service, i) => (
                   <motion.div 
                     key={i}
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.1 }}
-                    viewport={{ once: true }}
-                    className="bg-white p-10 rounded-[2.5rem] border border-snow-100 shadow-sm hover:shadow-2xl hover:shadow-navy-900/5 transition-all group relative overflow-hidden"
+                    className="bg-white p-10 rounded-[2.5rem] border border-snow-100 shadow-sm hover:shadow-2xl transition-all group relative overflow-hidden"
                   >
-                    <div className="absolute top-0 right-0 w-24 h-24 bg-brand/5 rounded-bl-[4rem] group-hover:bg-brand/10 transition-colors" />
                     <div className="w-16 h-16 bg-snow-50 rounded-2xl flex items-center justify-center mb-8 relative z-10">
                       {service.icon}
                     </div>
@@ -232,61 +329,41 @@ const App: React.FC = () => {
 
           <Gallery />
 
-          {/* Service Guarantee & Payment Section */}
-          <section className="py-24 px-6 bg-snow-50">
-            <div className="max-w-7xl mx-auto">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {/* Visual Documentation Guarantee */}
-                <motion.div 
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  className="bg-white rounded-[2.5rem] p-10 border border-snow-200 flex flex-col md:flex-row items-center gap-8 shadow-sm"
-                >
-                  <div className="w-20 h-20 bg-brand/5 rounded-3xl flex items-center justify-center shrink-0">
-                    <Camera className="text-brand" size={36} />
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-display font-bold mb-3 tracking-tight">Our Precision Guarantee</h3>
-                    <p className="text-slate-600 leading-relaxed">
-                      We take before and after photos of every job and only ask for payment once the job is complete. Your satisfaction is documented and guaranteed.
-                    </p>
-                  </div>
-                </motion.div>
+          {/* New "How it Works" Process Section */}
+          <section id="process" className="py-32 px-6 bg-white relative overflow-hidden">
+            <div className="max-w-7xl mx-auto relative z-10">
+              <div className="text-center mb-20">
+                <span className="text-brand font-black tracking-[0.4em] uppercase text-[10px]">Simple & Transparent</span>
+                <h2 className="text-4xl md:text-6xl font-display font-bold mt-4">The Snow Pros <span className="text-brand">Process.</span></h2>
+              </div>
 
-                {/* Payment Options */}
-                <motion.div 
-                  initial={{ opacity: 0, x: 20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  className="bg-navy-900 rounded-[2.5rem] p-10 flex flex-col md:flex-row items-center gap-8 shadow-xl"
-                >
-                  <div className="w-20 h-20 bg-white/5 rounded-3xl flex items-center justify-center shrink-0">
-                    <CircleDollarSign className="text-brand" size={36} />
-                  </div>
-                  <div className="w-full">
-                    <h3 className="text-2xl font-display font-bold mb-4 tracking-tight text-white">Flexible Payments</h3>
-                    <div className="flex flex-wrap gap-4">
-                      {[
-                        { icon: <Wallet size={14} />, label: "Cash" },
-                        { icon: <ShieldCheck size={14} />, label: "E-Transfer" },
-                        { icon: <ReceiptText size={14} />, label: "Invoice for Credit/Debit" }
-                      ].map((item, i) => (
-                        <div key={i} className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full border border-white/10">
-                          <span className="text-brand">{item.icon}</span>
-                          <span className="text-xs font-bold text-snow-100 uppercase tracking-widest">{item.label}</span>
-                        </div>
-                      ))}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                {[
+                  { icon: <ClipboardList />, step: "01", title: "Request Quote", desc: "Use our form or call us to get a tailored estimate for your Hanover property." },
+                  { icon: <SnowIcon />, step: "02", title: "Snow Event", desc: "Our team monitors Hanover weather 24/7. When snow hits 2 inches, we dispatch." },
+                  { icon: <Camera />, step: "03", title: "Precision Clear", desc: "Driveway is cleared using commercial gear. We take before and after photos." },
+                  { icon: <UserCheck />, step: "04", title: "Verify & Pay", desc: "Review the work. Payment is only processed after your absolute satisfaction." }
+                ].map((item, i) => (
+                  <motion.div 
+                    key={i}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    className="relative p-10 rounded-[2.5rem] bg-snow-50 border border-snow-100 flex flex-col items-center text-center group hover:bg-navy-900 transition-all duration-500"
+                  >
+                    <div className="text-brand mb-6 bg-white p-4 rounded-2xl shadow-sm group-hover:bg-brand group-hover:text-white transition-colors">
+                      {item.icon}
                     </div>
-                  </div>
-                </motion.div>
+                    <span className="text-xs font-black text-brand tracking-widest mb-2">{item.step}</span>
+                    <h3 className="text-xl font-display font-bold mb-4 group-hover:text-white">{item.title}</h3>
+                    <p className="text-slate-500 text-sm leading-relaxed group-hover:text-snow-100/60">{item.desc}</p>
+                  </motion.div>
+                ))}
               </div>
             </div>
           </section>
 
-          {/* Contact Section */}
           <section id="contact" className="py-32 px-6 relative overflow-hidden min-h-[800px] flex items-center">
-            {/* Immersive Background Image */}
             <div className="absolute inset-0 z-0">
               <img 
                 src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhr4B7bqtVPOISaADTYGY2uBQ49_74EoXTA_biLE0EKZvx8SETuqNpHk15EGik8EuLGGBz6OFIqptKOrqFWIg8xEhczItE1Fv_fCrnCaC_ETaQybyMZS471-yAUDeaSjBUJcnxhOJcf5oee2tT3j7zghrytRUCoQydmd1PM3_GF1ejKYPnERBO9by5ZkHCt/s1320/614255840_888667230334505_5132184906097328970_n.png" 
@@ -296,49 +373,17 @@ const App: React.FC = () => {
               <div className="absolute inset-0 bg-navy-950/80 backdrop-blur-sm" />
             </div>
 
-            {/* Drifting Snow Decorations */}
-            <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-20 z-10">
-              {[...Array(30)].map((_, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ 
-                    x: Math.random() * 100 + "%", 
-                    y: -20,
-                    opacity: Math.random() * 0.5 + 0.3
-                  }}
-                  animate={{ 
-                    y: "110%",
-                    x: `calc(${Math.random() * 100}% + ${Math.random() * 100 - 50}px)`
-                  }}
-                  transition={{ 
-                    duration: 15 + Math.random() * 15, 
-                    repeat: Infinity, 
-                    ease: "linear",
-                    delay: Math.random() * 15
-                  }}
-                  className="absolute w-1 h-1 bg-white rounded-full blur-[1px]"
-                />
-              ))}
-            </div>
-
             <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center relative z-20 w-full">
               <div>
-                <motion.div
-                  initial={{ opacity: 0, x: -30 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                >
+                <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }}>
                   <span className="text-brand font-black tracking-[0.4em] uppercase text-[10px] mb-6 block">Ready for the storm</span>
                   <h2 className="text-5xl md:text-7xl font-display font-bold text-white mb-10 leading-[0.9]">
                     Let Us Clear <br/><span className="text-ice">The Path.</span>
                   </h2>
                 </motion.div>
-                <p className="text-snow-100/70 text-lg mb-12 max-w-md leading-relaxed">
-                  Don't let the Hanover winter interrupt your schedule. Get a guaranteed clearing spot today.
-                </p>
-                
                 <div className="space-y-8">
                   <div className="flex items-center gap-6 group">
-                    <div className="w-14 h-14 glass rounded-2xl flex items-center justify-center group-hover:bg-brand/20 transition-all border border-white/10">
+                    <div className="w-14 h-14 glass rounded-2xl flex items-center justify-center border border-white/10">
                       <Phone size={24} className="text-brand" />
                     </div>
                     <div>
@@ -347,7 +392,7 @@ const App: React.FC = () => {
                     </div>
                   </div>
                   <div className="flex items-center gap-6 group">
-                    <div className="w-14 h-14 glass rounded-2xl flex items-center justify-center group-hover:bg-brand/20 transition-all border border-white/10">
+                    <div className="w-14 h-14 glass rounded-2xl flex items-center justify-center border border-white/10">
                       <Mail size={24} className="text-brand" />
                     </div>
                     <div>
@@ -355,18 +400,8 @@ const App: React.FC = () => {
                       <a href="mailto:matthew.s.danielson@gmail.com" className="text-lg font-display font-bold text-white hover:text-brand transition-colors break-all">matthew.s.danielson@gmail.com</a>
                     </div>
                   </div>
-                  <div className="flex items-center gap-6 group">
-                    <div className="w-14 h-14 glass rounded-2xl flex items-center justify-center group-hover:bg-brand/20 transition-all border border-white/10">
-                      <MapPin size={24} className="text-brand" />
-                    </div>
-                    <div>
-                      <p className="text-xs font-bold text-white/40 uppercase tracking-widest mb-1">HQ Location</p>
-                      <p className="text-2xl font-display font-bold text-white">Hanover, Ontario</p>
-                    </div>
-                  </div>
                 </div>
               </div>
-
               <ContactForm />
             </div>
           </section>
@@ -382,33 +417,20 @@ const App: React.FC = () => {
                     SNOW<span className="text-brand">PROS</span>
                   </span>
                 </div>
-                <p className="text-snow-100/40 text-sm max-w-xs leading-relaxed">
-                  Hanover's premium snow removal solution. Serving Hanover exclusively with industrial-grade reliability.
+                <p className="text-snow-100/40 text-sm max-w-sm leading-relaxed">
+                  Exclusively serving Hanover, ON with industrial-grade reliability. Your premier local solution for all winter maintenance needs.
                 </p>
               </div>
-              
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-12">
+              <div className="flex flex-wrap gap-10">
                 <div className="flex flex-col gap-4">
-                  <span className="text-white text-xs font-bold uppercase tracking-widest">Navigation</span>
-                  <a href="#services" className="text-snow-100/40 hover:text-white transition-colors text-sm">Services</a>
-                  <a href="#gallery" className="text-snow-100/40 hover:text-white transition-colors text-sm">Gallery</a>
-                  <a href="#contact" className="text-snow-100/40 hover:text-white transition-colors text-sm">Quote</a>
-                </div>
-                <div className="flex flex-col gap-4">
-                  <span className="text-white text-xs font-bold uppercase tracking-widest">Contact</span>
-                  <a href="tel:6474500225" className="text-snow-100/40 hover:text-white transition-colors text-sm">(647) 450-0225</a>
-                  <a href="mailto:matthew.s.danielson@gmail.com" className="text-snow-100/40 hover:text-white transition-colors text-sm">Email Us</a>
-                </div>
-                <div className="flex flex-col gap-4">
-                  <span className="text-white text-xs font-bold uppercase tracking-widest">Legal</span>
-                  <a href="#" className="text-snow-100/40 hover:text-white transition-colors text-sm">Privacy Policy</a>
-                  <a href="#" className="text-snow-100/40 hover:text-white transition-colors text-sm">Terms</a>
+                  <span className="text-white text-xs font-black uppercase tracking-widest">Explore</span>
+                  <a href="#services" className="text-snow-100/40 hover:text-white transition-colors text-xs uppercase font-bold tracking-widest">Services</a>
+                  <a href="#gallery" className="text-snow-100/40 hover:text-white transition-colors text-xs uppercase font-bold tracking-widest">Our Work</a>
+                  <button onClick={() => setIsPrivacyOpen(true)} className="text-snow-100/40 hover:text-white transition-colors text-xs uppercase font-bold tracking-widest text-left">Privacy Policy</button>
                 </div>
               </div>
             </div>
-            
             <div className="h-px bg-white/5 w-full mb-8" />
-            
             <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-snow-100/20 text-[10px] uppercase font-bold tracking-[0.2em]">
               <p>© 2024 Snow Pros Hanover. Fully Insured & WSIB Compliant.</p>
               <p>Designed for the Hanover Winter.</p>
@@ -416,16 +438,13 @@ const App: React.FC = () => {
           </div>
         </footer>
 
-        {/* Sticky Mobile CTA - Optimized for Thumb Access */}
         <div className="md:hidden fixed bottom-8 left-6 right-6 z-50">
           <motion.a 
             whileTap={{ scale: 0.95 }}
             href="tel:6474500225"
-            className="flex items-center justify-center gap-4 w-full bg-brand py-5 rounded-[1.5rem] text-white font-black text-sm uppercase tracking-widest shadow-[0_20px_40px_rgba(249,115,22,0.3)] border border-brand-hover/50"
+            className="flex items-center justify-center gap-4 w-full bg-brand py-5 rounded-[1.5rem] text-white font-black text-sm uppercase tracking-widest shadow-2xl"
           >
-            <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-              <Phone size={16} />
-            </div>
+            <Phone size={16} />
             Emergency Dispatch
           </motion.a>
         </div>

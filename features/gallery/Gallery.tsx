@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Maximize2 } from 'lucide-react';
+import { X, Maximize2, Wallet, ShieldCheck, ReceiptText, CircleDollarSign } from 'lucide-react';
 
 const images = [
   { 
@@ -27,7 +27,7 @@ export const Gallery: React.FC = () => {
   const [selectedImg, setSelectedImg] = useState<typeof images[0] | null>(null);
 
   return (
-    <section id="gallery" className="relative py-24 px-6 overflow-hidden min-h-[600px] flex items-center">
+    <section id="gallery" className="relative py-24 px-6 overflow-hidden min-h-[600px]">
       {/* Dynamic Background Image */}
       <div className="absolute inset-0 z-0">
         <img 
@@ -35,22 +35,22 @@ export const Gallery: React.FC = () => {
           alt="Professional Snow Removal Background" 
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-navy-950/85 backdrop-blur-[2px]" />
+        <div className="absolute inset-0 bg-navy-950/90 backdrop-blur-[2px]" />
       </div>
 
       <div className="max-w-7xl mx-auto relative z-10 w-full">
         <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
           <div className="max-w-xl">
-            <span className="text-brand font-bold tracking-[0.4em] uppercase text-[10px] mb-2 block">Visual Proof</span>
-            <h2 className="text-4xl md:text-5xl font-display font-bold text-white tracking-tight">Our Work in <span className="text-brand">Action.</span></h2>
-            <p className="text-snow-100/60 mt-4 leading-relaxed">Take a look at how we keep our community moving even after the heaviest Hanover blizzards. Industrial precision for every driveway.</p>
+            <span className="text-brand font-bold tracking-[0.4em] uppercase text-[10px] mb-2 block">Our Work</span>
+            <h2 className="text-4xl md:text-5xl font-display font-bold text-white tracking-tight">Hanover in <span className="text-brand">Action.</span></h2>
+            <p className="text-snow-100/60 mt-4 leading-relaxed">Proof of our industrial precision. We take pride in keeping Hanover's paths clear, safe, and navigable through the toughest blizzards.</p>
           </div>
           <div className="hidden md:block">
             <div className="w-24 h-1 bg-brand rounded-full" />
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
           {images.map((img, i) => (
             <motion.div
               key={img.id}
@@ -77,6 +77,56 @@ export const Gallery: React.FC = () => {
             </motion.div>
           ))}
         </div>
+
+        {/* Exclusive Caption */}
+        <div className="text-center mb-16">
+          <p className="text-snow-100/40 text-[10px] font-black uppercase tracking-[0.4em] inline-block border-y border-white/5 py-4 px-8">
+            Serving Hanover and surrounding areas exclusively.
+          </p>
+        </div>
+
+        {/* Payment & Policy Highlight */}
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch"
+        >
+          {/* Trust Pillar */}
+          <div className="glass p-10 rounded-[2.5rem] border border-white/10 flex flex-col justify-center">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-14 h-14 bg-brand/20 rounded-2xl flex items-center justify-center border border-brand/50">
+                <ShieldCheck className="text-brand" size={28} />
+              </div>
+              <h3 className="text-2xl font-display font-bold text-white tracking-tight">Zero Risk Guarantee</h3>
+            </div>
+            <p className="text-snow-100/60 leading-relaxed text-lg">
+              We value your trust. <span className="text-brand font-bold">Snow Pros only asks for payment once the job is complete</span> and verified. We provide photo documentation for every site to ensure absolute precision.
+            </p>
+          </div>
+
+          {/* Payment Methods */}
+          <div className="glass p-10 rounded-[2.5rem] border border-white/10 flex flex-col justify-center">
+             <div className="flex items-center gap-4 mb-8">
+              <div className="w-14 h-14 bg-brand/20 rounded-2xl flex items-center justify-center border border-brand/50">
+                <CircleDollarSign className="text-brand" size={28} />
+              </div>
+              <h3 className="text-2xl font-display font-bold text-white tracking-tight">Flexible Payment Options</h3>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+               {[
+                 { icon: <Wallet size={16} />, label: "Cash" },
+                 { icon: <ShieldCheck size={16} />, label: "E-Transfer" },
+                 { icon: <ReceiptText size={16} />, label: "Request an Invoice" }
+               ].map((item, i) => (
+                 <div key={i} className="bg-white/5 border border-white/10 p-4 rounded-2xl flex flex-col items-center text-center gap-2">
+                    <span className="text-brand">{item.icon}</span>
+                    <span className="text-[10px] font-black text-white uppercase tracking-widest">{item.label}</span>
+                 </div>
+               ))}
+            </div>
+          </div>
+        </motion.div>
       </div>
 
       <AnimatePresence>

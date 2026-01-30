@@ -17,7 +17,9 @@ import {
   Wallet,
   ClipboardList,
   UserCheck,
-  Snowflake as SnowIcon
+  Snowflake as SnowIcon,
+  Scale,
+  Gavel
 } from 'lucide-react';
 import { Hero } from './features/landing/Hero';
 import { Gallery } from './features/gallery/Gallery';
@@ -89,30 +91,136 @@ const PrivacyModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOp
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[100] bg-navy-950/95 backdrop-blur-xl flex items-center justify-center p-6"
+          className="fixed inset-0 z-[100] bg-navy-950/95 backdrop-blur-xl flex items-center justify-center p-4 md:p-6"
           onClick={onClose}
         >
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
-            className="glass max-w-2xl w-full max-h-[80vh] overflow-y-auto p-10 rounded-[3rem] border border-white/10"
+            className="glass max-w-3xl w-full max-h-[90vh] overflow-y-auto p-8 md:p-12 rounded-[2.5rem] md:rounded-[3.5rem] border border-white/10 custom-scrollbar shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex justify-between items-center mb-8">
-              <h2 className="text-3xl font-display font-bold text-white tracking-tight">Privacy <span className="text-brand">Policy</span></h2>
-              <button onClick={onClose} className="p-2 glass rounded-full text-white hover:text-brand">
+            <div className="flex justify-between items-start mb-10">
+              <div>
+                <div className="flex items-center gap-3 mb-2">
+                  <Scale className="text-brand" size={24} />
+                  <span className="text-brand font-black uppercase tracking-[0.3em] text-[10px]">Snow Pros Hanover</span>
+                </div>
+                <h2 className="text-3xl md:text-5xl font-display font-bold text-white tracking-tight">Privacy <span className="text-brand">Policy.</span></h2>
+              </div>
+              <button onClick={onClose} className="p-3 glass rounded-full text-white hover:text-brand transition-all">
                 <X size={24} />
               </button>
             </div>
-            <div className="space-y-6 text-snow-100/70 text-sm leading-relaxed">
-              <p>At Snow Pros Hanover, we respect your privacy. This policy outlines how we handle the information you provide when requesting a quote.</p>
-              <h4 className="text-white font-bold uppercase tracking-widest text-xs">1. Data Collection</h4>
-              <p>We collect your name, phone number, and Hanover address solely for the purpose of providing snow removal services. We do not sell or share this data with third parties.</p>
-              <h4 className="text-white font-bold uppercase tracking-widest text-xs">2. Photo Documentation</h4>
-              <p>As part of our Precision Guarantee, we take photos of work completed. These are stored securely and used only for quality verification and billing disputes.</p>
-              <h4 className="text-white font-bold uppercase tracking-widest text-xs">3. Your Rights</h4>
-              <p>You can request to have your contact information removed from our dispatch records at any time after service completion by emailing our office.</p>
+            
+            <div className="space-y-8 text-snow-100/70 text-sm md:text-base leading-relaxed">
+              <section>
+                <h4 className="text-white font-bold uppercase tracking-widest text-xs mb-3 border-l-2 border-brand pl-4">1. Commitment to Privacy</h4>
+                <p>Snow Pros Hanover is dedicated to protecting the personal information of our clients in the Hanover, ON area. This policy outlines how we collect, store, and safeguard your data in accordance with Canadian privacy standards.</p>
+              </section>
+
+              <section>
+                <h4 className="text-white font-bold uppercase tracking-widest text-xs mb-3 border-l-2 border-brand pl-4">2. Information Collection</h4>
+                <p>We collect essential information required to provide professional snow removal services:</p>
+                <ul className="list-disc pl-6 mt-2 space-y-2 opacity-80">
+                  <li>Full name for service identification and billing.</li>
+                  <li>Contact telephone number for scheduling and emergency dispatch alerts.</li>
+                  <li>Service address within Hanover, ON to facilitate route planning and site clearing.</li>
+                  <li>Optional property details for customized service requirements.</li>
+                </ul>
+              </section>
+
+              <section>
+                <h4 className="text-white font-bold uppercase tracking-widest text-xs mb-3 border-l-2 border-brand pl-4">3. Data Storage & Protection</h4>
+                <p>All client data is stored on encrypted, secure servers with restricted access. We utilize industry-standard security protocols to prevent unauthorized access, disclosure, or modification of your information.</p>
+              </section>
+
+              <section>
+                <h4 className="text-white font-bold uppercase tracking-widest text-xs mb-3 border-l-2 border-brand pl-4">4. Payment Policies</h4>
+                <p>Transparency is core to our operations in Hanover. Our payment terms are as follows:</p>
+                <ul className="list-disc pl-6 mt-2 space-y-2 opacity-80">
+                  <li><strong>Post-Completion Payment:</strong> We only request payment once the clearing job is confirmed complete and meets our quality standards.</li>
+                  <li><strong>Photo Documentation:</strong> For every service event, our crews capture before and after photos. These are stored for 12 months as proof of service and quality verification.</li>
+                  <li><strong>Invoicing:</strong> Upon request, a detailed digital invoice is generated and emailed to the client for approval prior to payment processing.</li>
+                </ul>
+              </section>
+
+              <section>
+                <h4 className="text-white font-bold uppercase tracking-widest text-xs mb-3 border-l-2 border-brand pl-4">5. Service Area Focus</h4>
+                <p>Our operations are exclusively localized to the Hanover, ON region. Information collected is used strictly for regional operations and is never sold or shared with third-party marketing entities.</p>
+              </section>
+
+              <section className="pt-6 border-t border-white/10">
+                <p className="text-[10px] uppercase font-black tracking-widest text-white/40">Last Updated: February 2024 • Snow Pros Hanover Legal Team</p>
+              </section>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
+
+const TermsModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[100] bg-navy-950/95 backdrop-blur-xl flex items-center justify-center p-4 md:p-6"
+          onClick={onClose}
+        >
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            className="glass max-w-3xl w-full max-h-[90vh] overflow-y-auto p-8 md:p-12 rounded-[2.5rem] md:rounded-[3.5rem] border border-white/10 custom-scrollbar shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex justify-between items-start mb-10">
+              <div>
+                <div className="flex items-center gap-3 mb-2">
+                  <Gavel className="text-brand" size={24} />
+                  <span className="text-brand font-black uppercase tracking-[0.3em] text-[10px]">Snow Pros Hanover</span>
+                </div>
+                <h2 className="text-3xl md:text-5xl font-display font-bold text-white tracking-tight">Terms of <span className="text-brand">Service.</span></h2>
+              </div>
+              <button onClick={onClose} className="p-3 glass rounded-full text-white hover:text-brand transition-all">
+                <X size={24} />
+              </button>
+            </div>
+            
+            <div className="space-y-8 text-snow-100/70 text-sm md:text-base leading-relaxed">
+              <section>
+                <h4 className="text-white font-bold uppercase tracking-widest text-xs mb-3 border-l-2 border-brand pl-4">1. Acceptance of Terms</h4>
+                <p>By requesting a quote or booking our services, you agree to these Terms of Service. These terms apply to all residential and commercial snow clearing operations conducted by Snow Pros within the Hanover town limits.</p>
+              </section>
+
+              <section>
+                <h4 className="text-white font-bold uppercase tracking-widest text-xs mb-3 border-l-2 border-brand pl-4">2. Service Trigger</h4>
+                <p>Standard service is triggered when snow accumulation reaches 2 inches (5 cm) as measured at our Hanover dispatch center. Emergency priority clearing is available for medical or essential service access upon request.</p>
+              </section>
+
+              <section>
+                <h4 className="text-white font-bold uppercase tracking-widest text-xs mb-3 border-l-2 border-brand pl-4">3. Liability & Safety</h4>
+                <p>Snow Pros is fully insured. However, we are not responsible for damage to items left in driveways (toys, cords, hoses) or for driveways with pre-existing damage or lack of proper drainage. Property owners are responsible for marking boundaries/obstacles.</p>
+              </section>
+
+              <section>
+                <h4 className="text-white font-bold uppercase tracking-widest text-xs mb-3 border-l-2 border-brand pl-4">4. Payment Terms</h4>
+                <ul className="list-disc pl-6 mt-2 space-y-2 opacity-80">
+                  <li>Payment is due immediately upon completion of the service event.</li>
+                  <li>Accepted methods: Cash, E-Transfer, or Corporate Check (Commercial Only).</li>
+                  <li>Failure to pay within 48 hours may result in suspension of seasonal service.</li>
+                </ul>
+              </section>
+
+              <section className="pt-6 border-t border-white/10">
+                <p className="text-[10px] uppercase font-black tracking-widest text-white/40">Last Updated: February 2024 • Hanover Regional Terms</p>
+              </section>
             </div>
           </motion.div>
         </motion.div>
@@ -126,6 +234,7 @@ const App: React.FC = () => {
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
   const [scrolled, setScrolled] = useState(false);
   const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
+  const [isTermsOpen, setIsTermsOpen] = useState(false);
 
   // Dynamic SEO Effect
   useEffect(() => {
@@ -145,8 +254,8 @@ const App: React.FC = () => {
           
           const metaDesc = document.querySelector('meta[name="description"]');
           if (isSnowing) {
-            document.title = "⚠️ EMERGENCY Snow Removal Hanover | Crews Dispatching | Snow Pros";
-            if (metaDesc) metaDesc.setAttribute('content', 'SNOW ALERT HANOVER: Emergency plowing crews are active now. Priority residential driveway clearing within 4 hours. Call (647) 450-0225 for immediate service.');
+            document.title = "⚠️ EMERGENCY Snow Removal Hanover | Dispatching NOW | Snow Pros";
+            if (metaDesc) metaDesc.setAttribute('content', 'SNOW ALERT HANOVER: Emergency plowing crews are active now. Priority residential driveway clearing within 4 hours. Call (647) 450-0225.');
           } else {
             document.title = "Top-Rated Snow Removal Hanover ON | Professional Plowing & Salting";
             if (metaDesc) metaDesc.setAttribute('content', 'Hanover Ontario\'s #1 reliable snow removal service. Residential and commercial plowing, salting, and 24/7 winter maintenance. Request your seasonal quote today.');
@@ -174,6 +283,7 @@ const App: React.FC = () => {
       <div className="relative font-sans text-navy-900 bg-snow-50 selection:bg-brand selection:text-white">
         <CookieConsent />
         <PrivacyModal isOpen={isPrivacyOpen} onClose={() => setIsPrivacyOpen(false)} />
+        <TermsModal isOpen={isTermsOpen} onClose={() => setIsTermsOpen(false)} />
 
         {/* Offline Banner */}
         <AnimatePresence>
@@ -185,7 +295,7 @@ const App: React.FC = () => {
               className="fixed top-0 left-0 right-0 z-[100] bg-brand text-white p-4 flex items-center justify-center gap-3 shadow-2xl"
             >
               <WifiOff size={20} className="animate-pulse" />
-              <span className="text-sm font-bold tracking-wide text-center">YOU ARE OFFLINE. CALL FOR URGENT SERVICE: <a href="tel:6474500225" className="underline font-black">(647) 450-0225</a></span>
+              <span className="text-sm font-bold tracking-wide text-center">OFFLINE MODE: CALL <a href="tel:6474500225" className="underline font-black">(647) 450-0225</a></span>
             </motion.div>
           )}
         </AnimatePresence>
@@ -207,7 +317,7 @@ const App: React.FC = () => {
             </div>
 
             <div className="hidden md:flex items-center gap-10">
-              {['Services', 'Gallery', 'About', 'Contact'].map((item) => (
+              {['Services', 'Gallery', 'Process', 'Contact'].map((item) => (
                 <a 
                   key={item} 
                   href={`#${item.toLowerCase()}`}
@@ -251,23 +361,27 @@ const App: React.FC = () => {
                 animate={{ x: 0 }}
                 exit={{ x: '100%' }}
                 transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                className="absolute right-0 top-0 bottom-0 w-full md:w-4/5 bg-navy-900 p-10 flex flex-col justify-center"
+                className="absolute right-0 top-0 bottom-0 w-full bg-navy-900 p-10 flex flex-col justify-center"
               >
-                <div className="flex flex-col gap-8 md:gap-10">
-                  {['Services', 'Gallery', 'About', 'Contact'].map((item) => (
+                <div className="flex flex-col gap-8">
+                  {['Services', 'Gallery', 'Process', 'Contact'].map((item) => (
                     <a 
                       key={item} 
                       href={`#${item.toLowerCase()}`}
                       onClick={() => setIsMenuOpen(false)}
-                      className="text-3xl md:text-4xl font-display font-bold text-white hover:text-brand transition-colors tracking-tight"
+                      className="text-3xl font-display font-bold text-white hover:text-brand transition-colors tracking-tight"
                     >
                       {item}
                     </a>
                   ))}
                   <div className="h-px bg-white/10 w-full my-4" />
-                  <a href="tel:6474500225" className="flex flex-col gap-2">
+                  <div className="flex flex-col gap-4">
+                    <button onClick={() => { setIsPrivacyOpen(true); setIsMenuOpen(false); }} className="text-left text-snow-200 text-xs font-bold uppercase tracking-widest">Privacy Policy</button>
+                    <button onClick={() => { setIsTermsOpen(true); setIsMenuOpen(false); }} className="text-left text-snow-200 text-xs font-bold uppercase tracking-widest">Terms of Service</button>
+                  </div>
+                  <a href="tel:6474500225" className="flex flex-col gap-2 mt-4">
                     <span className="text-[10px] uppercase tracking-[0.3em] text-white/50">Emergency Line</span>
-                    <span className="text-xl md:text-2xl font-bold text-brand flex items-center gap-3">
+                    <span className="text-xl font-bold text-brand flex items-center gap-3">
                       <Phone size={20} /> (647) 450-0225
                     </span>
                   </a>
@@ -329,7 +443,6 @@ const App: React.FC = () => {
 
           <Gallery />
 
-          {/* New "How it Works" Process Section */}
           <section id="process" className="py-20 md:py-32 px-6 bg-white relative overflow-hidden">
             <div className="max-w-7xl mx-auto relative z-10">
               <div className="text-center mb-12 md:mb-20">
@@ -337,7 +450,7 @@ const App: React.FC = () => {
                 <h2 className="text-3xl md:text-6xl font-display font-bold mt-4">The Snow Pros <span className="text-brand">Process.</span></h2>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                 {[
                   { icon: <ClipboardList size={20} />, step: "01", title: "Request Quote", desc: "Use our form or call us to get a estimate for your Hanover property." },
                   { icon: <SnowIcon size={20} />, step: "02", title: "Snow Event", desc: "Our team monitors Hanover weather 24/7. When snow hits, we dispatch." },
@@ -401,6 +514,16 @@ const App: React.FC = () => {
                     </div>
                   </div>
                 </div>
+                
+                <div className="mt-12 flex items-center gap-3">
+                  <ShieldCheck className="text-white/20" size={16} />
+                  <button 
+                    onClick={() => setIsPrivacyOpen(true)}
+                    className="text-[10px] font-black uppercase tracking-widest text-white/40 hover:text-brand transition-colors border-b border-white/10 pb-1"
+                  >
+                    View Our Detailed Privacy & Data Policies
+                  </button>
+                </div>
               </div>
               <ContactForm />
             </div>
@@ -426,7 +549,12 @@ const App: React.FC = () => {
                   <span className="text-white text-xs font-black uppercase tracking-widest">Explore</span>
                   <a href="#services" className="text-snow-100/40 hover:text-white transition-colors text-xs uppercase font-bold tracking-widest">Services</a>
                   <a href="#gallery" className="text-snow-100/40 hover:text-white transition-colors text-xs uppercase font-bold tracking-widest">Our Work</a>
+                  <a href="#process" className="text-snow-100/40 hover:text-white transition-colors text-xs uppercase font-bold tracking-widest">How It Works</a>
+                </div>
+                <div className="flex flex-col gap-4">
+                  <span className="text-white text-xs font-black uppercase tracking-widest">Legal</span>
                   <button onClick={() => setIsPrivacyOpen(true)} className="text-snow-100/40 hover:text-white transition-colors text-xs uppercase font-bold tracking-widest text-left">Privacy Policy</button>
+                  <button onClick={() => setIsTermsOpen(true)} className="text-snow-100/40 hover:text-white transition-colors text-xs uppercase font-bold tracking-widest text-left">Terms of Service</button>
                 </div>
               </div>
             </div>

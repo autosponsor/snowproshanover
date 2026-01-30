@@ -113,15 +113,18 @@ export const Gallery: React.FC = () => {
               </div>
               <h3 className="text-2xl font-display font-bold text-white tracking-tight">Flexible Payment Options</h3>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                {[
-                 { icon: <Wallet size={16} />, label: "Cash" },
-                 { icon: <ShieldCheck size={16} />, label: "E-Transfer" },
-                 { icon: <ReceiptText size={16} />, label: "Request an Invoice" }
+                 { icon: <Wallet size={16} />, label: "Cash", sub: "Traditional and secure." },
+                 { icon: <ShieldCheck size={16} />, label: "E-Transfer", sub: "Fast, digital convenience." },
+                 { icon: <ReceiptText size={16} />, label: "Invoice", sub: "We will generate and send a detailed invoice for your approval." }
                ].map((item, i) => (
-                 <div key={i} className="bg-white/5 border border-white/10 p-4 rounded-2xl flex flex-col items-center text-center gap-2">
-                    <span className="text-brand">{item.icon}</span>
-                    <span className="text-[10px] font-black text-white uppercase tracking-widest">{item.label}</span>
+                 <div key={i} className="bg-white/5 border border-white/10 p-5 rounded-2xl flex flex-col items-center text-center gap-3">
+                    <span className="text-brand shrink-0">{item.icon}</span>
+                    <div className="space-y-1">
+                      <span className="text-[10px] font-black text-white uppercase tracking-widest block">{item.label}</span>
+                      <p className="text-[9px] text-snow-100/40 leading-tight">{item.sub}</p>
+                    </div>
                  </div>
                ))}
             </div>

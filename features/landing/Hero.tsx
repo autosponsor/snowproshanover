@@ -36,7 +36,6 @@ const WeatherWidget: React.FC = () => {
   useEffect(() => {
     const fetchWeather = async () => {
       try {
-        const apiKey = '432e73bbfd1d41b7b1841248261901';
         const response = await fetch(
           `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=Hanover Ontario&days=3&aqi=no&alerts=no`
         );

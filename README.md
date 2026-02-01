@@ -57,9 +57,6 @@ This project is optimized for deployment on **Netlify** with full Support for Si
 ### 2. Environment Variables
 To ensure the weather widget functions correctly, you should configure the following variable in the Netlify Dashboard (**Site Settings > Environment variables**):
 
-| Key | Value | Description |
-|-----|-------|-------------|
-| `VITE_WEATHER_API_KEY` | `432e73bbfd1d41b7b1841248261901` | Required for real-time Hanover weather data. |
 
 ### 3. Redirects & Security
 The `netlify.toml` file is configured to:

@@ -34,6 +34,7 @@ export const Gallery: React.FC = () => {
           src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjvt3nUFH-HR-ALzsBjtRJY5Zfi-g7t8mMErAByQma9iMO0kbNJkfN1AXP2G8heSf-8ZN06I-OXBCA9CKyHpjyGOcAkVWuqkdpLkPD4XeufqQJNLZBNxavE0-T3X3Uibeu92bYT92dTMb6FNRO_DtaTvETHdSl9fVK2A9ySG_TMXsvQsvY1-oKpzAvD4nOK/s1800/hero-img_pixelflex.webp" 
           alt="Professional Snow Removal Background" 
           className="w-full h-full object-cover"
+          loading="lazy"
         />
         <div className="absolute inset-0 bg-navy-950/90 backdrop-blur-[2px]" />
       </div>
@@ -157,6 +158,7 @@ export const Gallery: React.FC = () => {
                 src={selectedImg.url} 
                 className="w-full h-auto rounded-[2.5rem] shadow-[0_0_80px_rgba(0,0,0,0.5)] border border-white/10"
                 alt={selectedImg.title}
+                loading="lazy"
               />
               <div className="mt-8 text-center">
                 <h2 className="text-3xl md:text-4xl font-display text-white font-bold tracking-tight">{selectedImg.title}</h2>

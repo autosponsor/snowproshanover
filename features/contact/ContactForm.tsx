@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -65,7 +66,6 @@ export const ContactForm: React.FC = () => {
       });
       setSuccess(true);
       reset();
-      // Hide success after a longer period to let them enjoy the state
       setTimeout(() => setSuccess(false), 8000);
     } catch (error) {
       console.error(error);
@@ -88,9 +88,9 @@ export const ContactForm: React.FC = () => {
         className="glass p-8 md:p-12 rounded-[3rem] shadow-[0_30px_80px_rgba(0,0,0,0.6)] border border-white/10 space-y-8 relative overflow-hidden"
       >
         <input type="hidden" name="form-name" value="snow-pros-quote" />
-        <p className="hidden">
+        <div className="hidden">
           <label>Don’t fill this out if you’re human: <input name="bot-field" {...register("bot-field")} /></label>
-        </p>
+        </div>
 
         <div className="flex items-center gap-4">
           <div className="bg-brand/20 p-2 rounded-xl">
@@ -105,6 +105,7 @@ export const ContactForm: React.FC = () => {
             <input 
               {...register("name")}
               name="name"
+              autoComplete="name"
               placeholder="Full Name"
               className={cn(
                 "w-full bg-white/5 border rounded-2xl p-5 text-white placeholder:text-white/20 outline-none transition-all focus:ring-2 text-sm md:text-base",
@@ -118,6 +119,8 @@ export const ContactForm: React.FC = () => {
             <input 
               {...register("phone")}
               name="phone"
+              type="tel"
+              autoComplete="tel"
               placeholder="(647) 000-0000"
               className={cn(
                 "w-full bg-white/5 border rounded-2xl p-5 text-white placeholder:text-white/20 outline-none transition-all focus:ring-2 text-sm md:text-base",
@@ -132,6 +135,7 @@ export const ContactForm: React.FC = () => {
           <input 
             {...register("address")}
             name="address"
+            autoComplete="street-address"
             placeholder="Street, Town, ON"
             className={cn(
               "w-full bg-white/5 border rounded-2xl p-5 text-white placeholder:text-white/20 outline-none transition-all focus:ring-2 text-sm md:text-base",
@@ -181,7 +185,6 @@ export const ContactForm: React.FC = () => {
           {isSubmitting ? <Loader2 className="animate-spin" size={20} /> : "Confirm Quote Request"}
         </button>
 
-        {/* Success Overlay */}
         <AnimatePresence>
           {success && (
             <motion.div 
@@ -205,6 +208,7 @@ export const ContactForm: React.FC = () => {
                   Our Hanover dispatchers have logged your address. We'll be in touch shortly to confirm your winter clearing plan.
                 </p>
                 <button 
+                  type="button"
                   onClick={() => setSuccess(false)}
                   className="text-brand text-xs font-black uppercase tracking-[0.4em] border-b border-brand/20 pb-1 hover:border-brand transition-colors"
                 >

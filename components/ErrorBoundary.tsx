@@ -14,15 +14,12 @@ interface State {
  * ErrorBoundary class component to catch JavaScript errors anywhere in their child component tree,
  * log those errors, and display a fallback UI instead of the component tree that crashed.
  */
-// Fix: Use the standard Component inheritance with explicit generics for Props and State
-export class ErrorBoundary extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    // Fix: Properly initialize state in constructor. Extending Component<Props, State> ensures 'this.state' is defined.
-    this.state = {
-      hasError: false
-    };
-  }
+// Fix: Explicitly extend React.Component to ensure this.props and this.state are correctly typed and recognized by the compiler.
+export class ErrorBoundary extends React.Component<Props, State> {
+  // Fix: Initialize state as a class property. This ensures 'this.state' is defined for the TypeScript compiler and avoids scoping issues in the constructor.
+  public state: State = {
+    hasError: false
+  };
 
   public static getDerivedStateFromError(_: Error): State {
     // Update state so the next render will show the fallback UI.
@@ -35,7 +32,7 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   public render() {
-    // Fix: Access hasError from the state object. Inheriting from Component ensures 'this.state' is available.
+    // Fix: Access hasError from the state object. Inheriting from React.Component ensures 'this.state' is available.
     if (this.state.hasError) {
       return (
         <div className="min-h-screen bg-navy-950 flex flex-col items-center justify-center p-6 text-center">
@@ -64,7 +61,7 @@ export class ErrorBoundary extends Component<Props, State> {
       );
     }
 
-    // Fix: Access children via this.props to return the wrapped content. Inheriting from Component ensures 'this.props' is available.
+    // Fix: Access children via this.props to return the wrapped content. Inheriting from React.Component ensures 'this.props' is available.
     return this.props.children;
   }
 }

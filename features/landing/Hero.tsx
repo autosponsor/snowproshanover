@@ -2,33 +2,60 @@ import React, { useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ChevronRight, Phone, CloudSnow } from 'lucide-react';
 
-interface WeatherData {
-  current: {
-    temp_c: number;
-    condition: { text: string; icon: string; };
-  };
-  forecast: { forecastday: any[]; };
+interface OWMCurrentData {
+  main: { temp: number };
+  weather: { main: string; icon: string }[];
+}
+
+interface OWMForecastItem {
+  dt: number;
+  main: { temp: number };
+  weather: { icon: string }[];
 }
 
 const WeatherWidget: React.FC = () => {
-  const [data, setData] = useState<WeatherData | null>(null);
+  const [current, setCurrent] = useState<OWMCurrentData | null>(null);
+  const [forecast, setForecast] = useState<OWMForecastItem[] | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchWeather = async () => {
-      const apiKey = process.env.API_KEY;
+      const envKey = import.meta.env.VITE_WEATHER_API_KEY?.trim();
+      const apiKey = envKey || '904c1c69a07b07044e3156ced85b6a15';
+      
       if (!apiKey) {
         setLoading(false);
         return;
       }
       try {
-        const response = await fetch(
-          `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=Hanover Ontario&days=3`
-        );
-        const json = await response.json();
-        setData(json);
+        const [currentRes, forecastRes] = await Promise.all([
+          fetch(`https://api.openweathermap.org/data/2.5/weather?q=Hanover,CA&units=metric&appid=${apiKey}`),
+          fetch(`https://api.openweathermap.org/data/2.5/forecast?q=Hanover,CA&units=metric&appid=${apiKey}`)
+        ]);
+
+        if (currentRes.ok) {
+          const currentData = await currentRes.json();
+          setCurrent(currentData);
+        } else {
+          setCurrent(null);
+        }
+
+        if (forecastRes.ok) {
+          const forecastData = await forecastRes.json();
+          if (forecastData.list && forecastData.list.length > 0) {
+            setForecast([
+              forecastData.list[7] || forecastData.list[forecastData.list.length - 1],
+              forecastData.list[15] || forecastData.list[forecastData.list.length - 1],
+              forecastData.list[23] || forecastData.list[forecastData.list.length - 1]
+            ]);
+          } else {
+            setForecast(null);
+          }
+        } else {
+          setForecast(null);
+        }
       } catch (err) {
-        console.error("Weather widget failed to load");
+        console.error("Weather widget failed to load", err);
       } finally {
         setLoading(false);
       }
@@ -36,25 +63,59 @@ const WeatherWidget: React.FC = () => {
     fetchWeather();
   }, []);
 
-  if (loading) return <div className="glass-dark p-6 rounded-[2.5rem] w-80 h-48 animate-pulse" />;
-  if (!data) return null;
+  if (loading) {
+    return (
+      <div className="glass-dark p-6 rounded-[2.5rem] w-80 border border-white/10 shadow-2xl relative overflow-hidden">
+        <div className="relative z-10 animate-pulse">
+          <div className="w-24 h-3 bg-brand/50 rounded-full mb-3" />
+          <div className="flex items-center gap-4 mb-5">
+            <div className="w-20 h-8 bg-white/20 rounded-full" />
+            <div className="w-10 h-10 bg-white/10 rounded-full" />
+          </div>
+          <div className="h-px bg-white/5 mb-4" />
+          <div className="grid grid-cols-3 gap-3">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="text-center">
+                <div className="w-8 h-2 bg-white/20 rounded-full mx-auto mb-3" />
+                <div className="bg-white/5 rounded-2xl p-2 border border-white/5 h-[68px] flex flex-col items-center justify-center gap-2">
+                  <div className="w-6 h-6 bg-white/10 rounded-full" />
+                  <div className="w-6 h-2 bg-white/20 rounded-full" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+  if (!current || !forecast) {
+    return (
+      <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="glass-dark p-6 rounded-[2.5rem] w-80 border border-white/10 shadow-2xl relative overflow-hidden group">
+        <div className="relative z-10 text-center">
+          <CloudSnow size={32} className="mx-auto text-white/40 mb-3" />
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-brand block mb-2">Weather Widget</span>
+          <p className="text-white/60 text-xs">Awaiting API Activation...</p>
+        </div>
+      </motion.div>
+    );
+  }
 
   return (
     <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="glass-dark p-6 rounded-[2.5rem] w-80 border border-white/10 shadow-2xl relative overflow-hidden group">
       <div className="relative z-10">
         <span className="text-[10px] font-black uppercase tracking-[0.2em] text-brand block mb-1">Live Hanover</span>
         <div className="flex items-center gap-2 mb-4">
-          <span className="text-3xl font-display font-bold text-white">{Math.round(data.current.temp_c)}°C</span>
-          <img src={data.current.condition.icon} alt="icon" className="w-10 h-10" />
+          <span className="text-3xl font-display font-bold text-white">{Math.round(current.main.temp)}°C</span>
+          <img src={`https://openweathermap.org/img/wn/${current.weather[0].icon}@2x.png`} alt="icon" className="w-10 h-10" />
         </div>
         <div className="h-px bg-white/5 mb-4" />
         <div className="grid grid-cols-3 gap-3">
-          {data.forecast.forecastday.map((day: any, i: number) => (
+          {forecast.map((day: OWMForecastItem, i: number) => (
             <div key={i} className="text-center">
-              <span className="text-[9px] font-bold text-white/40 block mb-2">{i === 0 ? 'Now' : 'Next'}</span>
+              <span className="text-[9px] font-bold text-white/40 block mb-2">{i === 0 ? 'Tmrw' : `Day ${i + 2}`}</span>
               <div className="bg-white/5 rounded-2xl p-2 border border-white/5">
-                <img src={day.day.condition.icon} className="w-8 h-8 mx-auto" alt="icon" />
-                <span className="text-[10px] font-bold text-white block">{Math.round(day.day.avgtemp_c)}°</span>
+                <img src={`https://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png`} className="w-8 h-8 mx-auto" alt="icon" />
+                <span className="text-[10px] font-bold text-white block">{Math.round(day.main.temp)}°</span>
               </div>
             </div>
           ))}
@@ -73,7 +134,7 @@ export const Hero: React.FC = () => {
       <motion.div style={{ y }} className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-navy-950/40 z-10" />
         <img 
-          src="https://i.ytimg.com/vi/ERrg_QkATwg/maxresdefault.jpg" 
+          src="https://images.unsplash.com/photo-1478265409131-1f65c88f965c?auto=format&fit=crop&q=80" 
           className="w-full h-[120%] object-cover" 
           alt="Heavy duty snow removal truck in Hanover" 
           loading="lazy"

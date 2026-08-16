@@ -1,7 +1,13 @@
 {
-  "name": "Snow Pros - Hanover Snow Removal",
-  "description": "Exclusively serving Hanover, ON with industrial-grade reliability. Professional snow removal, emergency plowing, and salting for residential and commercial properties in the Hanover area.",
+  "name": "Snow Pros Hanover",
+  "short_name": "Snow Pros",
+  "description": "Exclusively serving Hanover, ON with industrial-grade reliability. Professional snow removal, emergency plowing, and salting.",
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#020617",
+  "background_color": "#F9FAFB",
   "requestFramePermissions": [
     "geolocation"
-  ]
+  ],
+  "majorCapabilities": []
 }

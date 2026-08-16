@@ -18,7 +18,7 @@ You **must** set the following environment variables in the Netlify Dashboard (*
 
 | Key | Example Value | Description |
 |-----|---------------|-------------|
-|  | Your WeatherAPI.com token |
+| `VITE_WEATHER_API_KEY` | `432e73bbfd1d41b7b1841248261901` | Your WeatherAPI.com token |
 
 *Note: The application is configured to gracefully hide the weather widget if the key is missing.*
 

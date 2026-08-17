@@ -3,6 +3,8 @@
  * Centralized error logging and reporting
  */
 
+import * as Sentry from '@sentry/react';
+
 interface ErrorReport {
   message: string;
   error: Error;
@@ -35,22 +37,23 @@ function logToConsole(report: ErrorReport): void {
 }
 
 /**
- * Send error to remote monitoring service (e.g., Sentry)
- * This is a placeholder for actual Sentry integration
+ * Send error to remote monitoring service (Sentry)
  */
 function sendToMonitoring(report: ErrorReport): void {
-  // TODO: Integrate with Sentry or similar service
-  // Example:
-  // if (window.Sentry) {
-  //   window.Sentry.captureException(report.error, {
-  //     contexts: {
-  //       app: report.context,
-  //     },
-  //     level: report.severity,
-  //   });
-  // }
+  // Send to Sentry in production
+  if (import.meta.env.MODE === 'production' && import.meta.env.VITE_SENTRY_DSN) {
+    Sentry.captureException(report.error, {
+      level: report.severity as any,
+      contexts: {
+        app: report.context as Record<string, any>,
+      },
+      tags: {
+        message: report.message,
+      },
+    });
+  }
 
-  // For now, we'll just log it
+  // Also keep console logging for development
   const entry = {
     timestamp: report.timestamp,
     message: report.message,
@@ -60,8 +63,9 @@ function sendToMonitoring(report: ErrorReport): void {
     ...report.context,
   };
 
-  // Could send to backend endpoint
-  // navigator.sendBeacon('/api/errors', JSON.stringify(entry));
+  if (import.meta.env.MODE === 'development') {
+    console.debug('Error report entry:', entry);
+  }
 }
 
 /**
@@ -113,9 +117,38 @@ export function reportCritical(
 }
 
 /**
+ * Initialize Sentry error reporting
+ */
+export function initializeSentry(): void {
+  const sentryDsn = import.meta.env.VITE_SENTRY_DSN;
+  
+  if (sentryDsn && import.meta.env.MODE === 'production') {
+    Sentry.init({
+      dsn: sentryDsn,
+      environment: import.meta.env.MODE,
+      tracesSampleRate: 0.1,
+      release: import.meta.env.VITE_APP_VERSION || '1.0.0',
+      integrations: [
+        new Sentry.Replay({
+          maskAllText: true,
+          blockAllMedia: true,
+        }),
+      ],
+      beforeSend(event) {
+        // Filter out certain errors if needed
+        return event;
+      },
+    });
+  }
+}
+
+/**
  * Global error handler setup
  */
 export function setupGlobalErrorHandlers(): void {
+  // Initialize Sentry
+  initializeSentry();
+
   // Handle uncaught errors
   window.addEventListener('error', (event) => {
     reportError('Uncaught Error', event.error as Error, {

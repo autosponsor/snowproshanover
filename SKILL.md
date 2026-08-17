@@ -1,5 +1,5 @@
 ---
-name: react-landing-page-development
+name: snowproshanover
 description: Complete workflow for building enterprise-grade landing pages using React, TypeScript, Tailwind CSS, and Netlify with a focus on functionality, scalability, maintainability, and simplicity.
 applies_to: 
   - "**/*.tsx"

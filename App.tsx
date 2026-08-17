@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { HelmetProvider } from 'react-helmet-async';
 import { Hero } from './features/landing/Hero';
-import { Gallery } from './features/gallery/Gallery';
 import { NotFound } from './components/NotFound';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { CookieConsent } from './components/CookieConsent';
@@ -14,11 +13,19 @@ import { ContactSection } from './features/contact/ContactSection';
 import { OfflineBanner } from './components/OfflineBanner';
 import { MobileCallButton, BackToTopButton } from './components/FloatingButtons';
 import { useDynamicSEO } from './hooks/useDynamicSEO';
-import { TestimonialSlider } from './components/TestimonialSlider';
 import { SEOMetadata } from './components/SEOMetadata';
 import { WeatherAlertBanner } from './components/WeatherAlertBanner';
 import { ToastContainer } from './components/ToastContainer';
 import { setupGlobalErrorHandlers } from './lib/errorReporter';
+
+// Lazy-loaded components for better initial load performance
+const Gallery = lazy(() => import('./features/gallery/Gallery').then(m => ({ default: m.Gallery })));
+const TestimonialSlider = lazy(() => import('./components/TestimonialSlider').then(m => ({ default: m.TestimonialSlider })));
+
+// Loading placeholder component
+const SectionLoadingPlaceholder: React.FC = () => (
+  <div className="w-full h-96 bg-gradient-to-b from-snow-100 to-snow-200 animate-pulse rounded-lg" />
+);
 
 const App: React.FC = () => {
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
@@ -77,8 +84,12 @@ const App: React.FC = () => {
             <Hero />
             <TrustBanner />
             <ServicesSection />
-            <Gallery />
-            <TestimonialSlider />
+            <Suspense fallback={<SectionLoadingPlaceholder />}>
+              <Gallery />
+            </Suspense>
+            <Suspense fallback={<SectionLoadingPlaceholder />}>
+              <TestimonialSlider />
+            </Suspense>
             <ContactSection />
           </main>
 

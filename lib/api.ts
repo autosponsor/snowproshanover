@@ -1,8 +1,9 @@
 /**
- * Weather API Service
- * Centralized API calls for weather data with proper error handling
+ * Weather data client.
+ *
+ * Provider credentials remain in the Netlify function; the browser only talks
+ * to the same-origin weather endpoint.
  */
-
 import { APIError, NetworkError } from './errors';
 import { retryWithBackoff } from './retryPolicy';
 
@@ -20,164 +21,116 @@ export interface ForecastItem {
   description: string;
 }
 
+interface OWMWeather {
+  main?: string;
+  icon?: string;
+  description?: string;
+}
+
 interface OWMCurrentResponse {
-  main: { temp: number };
-  weather: Array<{ main: string; icon: string; description: string }>;
+  main?: { temp?: number };
+  weather?: OWMWeather[];
+}
+
+interface OWMForecastEntry {
+  dt?: number;
+  main?: { temp?: number };
+  weather?: OWMWeather[];
 }
 
 interface OWMForecastResponse {
-  list: Array<{
-    dt: number;
-    main: { temp: number };
-    weather: Array<{ icon: string; description: string }>;
-  }>;
+  list?: OWMForecastEntry[];
 }
 
-/**
- * Get API key from environment variables
- */
-function getWeatherApiKey(): string | null {
-  const apiKey = import.meta.env.VITE_WEATHER_API_KEY?.trim();
-  return apiKey ? apiKey : null;
+function weatherEndpoint(city: string, forecast = false): string {
+  const params = new URLSearchParams({ city });
+  if (forecast) params.set('forecast', 'true');
+  return `/.netlify/functions/weather?${params.toString()}`;
 }
 
-/**
- * Validate API key is available
- */
-function validateApiKey(): void {
-  if (!getWeatherApiKey()) {
-    throw new Error('Weather API key not configured. Set VITE_WEATHER_API_KEY environment variable.');
+async function requestWeather<T>(city: string, forecast = false): Promise<T> {
+  const response = await fetch(weatherEndpoint(city, forecast));
+  if (!response.ok) {
+    throw new APIError(`Weather API error: ${response.statusText}`, response.status);
   }
+  return (await response.json()) as T;
 }
 
-/**
- * Parse OpenWeatherMap current weather response
- */
 function parseCurrentWeather(data: OWMCurrentResponse): WeatherData {
-  const weather = data.weather[0];
-  if (!weather) {
+  const weather = data.weather?.[0];
+  const temperature = data.main?.temp;
+
+  if (!weather || typeof temperature !== 'number' || !weather.main || !weather.icon || !weather.description) {
     throw new APIError('Invalid weather data format');
   }
 
   return {
-    temperature: Math.round(data.main.temp),
+    temperature: Math.round(temperature),
     condition: weather.main,
     icon: weather.icon,
     description: weather.description,
   };
 }
 
-/**
- * Parse OpenWeatherMap forecast response
- */
 function parseForecast(data: OWMForecastResponse): ForecastItem[] {
-  if (!data.list || data.list.length === 0) {
+  const entries = data.list ?? [];
+  const fallback = entries[entries.length - 1];
+  if (!fallback) {
     throw new APIError('Invalid forecast data format');
   }
 
-  // Return forecast for 24h, 48h, and 72h from now
-  return [
-    data.list[7] || data.list[data.list.length - 1],
-    data.list[15] || data.list[data.list.length - 1],
-    data.list[23] || data.list[data.list.length - 1],
-  ].map((item) => ({
-    timestamp: item.dt,
-    temperature: Math.round(item.main.temp),
-    icon: item.weather[0]?.icon || '',
-    description: item.weather[0]?.description || '',
-  }));
+  return [7, 15, 23].map((index) => {
+    const entry = entries[index] ?? fallback;
+    const weather = entry.weather?.[0];
+    const temperature = entry.main?.temp;
+
+    if (typeof entry.dt !== 'number' || typeof temperature !== 'number' || !weather) {
+      throw new APIError('Invalid forecast data format');
+    }
+
+    return {
+      timestamp: entry.dt,
+      temperature: Math.round(temperature),
+      icon: weather.icon ?? '',
+      description: weather.description ?? '',
+    };
+  });
 }
 
-/**
- * Check if the weather condition indicates snow/hazardous conditions
- */
+function toNetworkError(message: string, error: unknown): NetworkError {
+  return new NetworkError(message, error instanceof Error ? error : new Error(String(error)));
+}
+
 export function isSnowCondition(condition: string): boolean {
   const snowConditions = ['snow', 'ice', 'blizzard', 'sleet', 'freezing rain'];
-  return snowConditions.some((c) => condition.toLowerCase().includes(c));
+  return snowConditions.some((value) => condition.toLowerCase().includes(value));
 }
 
-/**
- * Get current weather for a city
- */
 export async function getCurrentWeather(city: string): Promise<WeatherData> {
-  validateApiKey();
-
-  const apiKey = getWeatherApiKey();
-  if (!apiKey) throw new Error('API key missing');
-
   return retryWithBackoff(async () => {
     try {
-      const response = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&units=metric&appid=${apiKey}`
-      );
-
-      if (!response.ok) {
-        throw new APIError(
-          `Weather API error: ${response.statusText}`,
-          response.status
-        );
-      }
-
-      const data = (await response.json()) as OWMCurrentResponse;
-      return parseCurrentWeather(data);
+      return parseCurrentWeather(await requestWeather<OWMCurrentResponse>(city));
     } catch (error) {
-      if (error instanceof APIError) {
-        throw error;
-      }
-      throw new NetworkError(
-        'Failed to fetch weather data',
-        error instanceof Error ? error : new Error(String(error))
-      );
+      if (error instanceof APIError) throw error;
+      throw toNetworkError('Failed to fetch weather data', error);
     }
   });
 }
 
-/**
- * Get weather forecast for a city
- */
 export async function getForecast(city: string): Promise<ForecastItem[]> {
-  validateApiKey();
-
-  const apiKey = getWeatherApiKey();
-  if (!apiKey) throw new Error('API key missing');
-
   return retryWithBackoff(async () => {
     try {
-      const response = await fetch(
-        `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(city)}&units=metric&appid=${apiKey}`
-      );
-
-      if (!response.ok) {
-        throw new APIError(
-          `Weather API error: ${response.statusText}`,
-          response.status
-        );
-      }
-
-      const data = (await response.json()) as OWMForecastResponse;
-      return parseForecast(data);
+      return parseForecast(await requestWeather<OWMForecastResponse>(city, true));
     } catch (error) {
-      if (error instanceof APIError) {
-        throw error;
-      }
-      throw new NetworkError(
-        'Failed to fetch forecast data',
-        error instanceof Error ? error : new Error(String(error))
-      );
+      if (error instanceof APIError) throw error;
+      throw toNetworkError('Failed to fetch forecast data', error);
     }
   });
 }
 
-/**
- * Get both current weather and forecast in parallel
- */
 export async function getWeatherData(
-  city: string
+  city: string,
 ): Promise<{ current: WeatherData; forecast: ForecastItem[] }> {
-  const [current, forecast] = await Promise.all([
-    getCurrentWeather(city),
-    getForecast(city),
-  ]);
-
+  const [current, forecast] = await Promise.all([getCurrentWeather(city), getForecast(city)]);
   return { current, forecast };
 }

@@ -93,25 +93,30 @@ const WeatherWidget: React.FC = () => {
     );
   }
 
+  const currentIcon = current.weather[0]?.icon;
+
   return (
     <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="glass-dark p-6 rounded-[2.5rem] w-80 border border-white/10 shadow-2xl relative overflow-hidden group">
       <div className="relative z-10">
         <span className="text-[10px] font-black uppercase tracking-[0.2em] text-brand block mb-1">Live Hanover</span>
         <div className="flex items-center gap-2 mb-4">
           <span className="text-3xl font-display font-bold text-white">{Math.round(current.main.temp)}°C</span>
-          <img src={`https://openweathermap.org/img/wn/${current.weather[0].icon}@2x.png`} alt="icon" className="w-10 h-10" />
+          {currentIcon && <img src={`https://openweathermap.org/img/wn/${currentIcon}@2x.png`} alt="Current conditions" className="w-10 h-10" />}
         </div>
         <div className="h-px bg-white/5 mb-4" />
         <div className="grid grid-cols-3 gap-3">
-          {forecast.map((day: OWMForecastItem, i: number) => (
-            <div key={i} className="text-center">
-              <span className="text-[9px] font-bold text-white/40 block mb-2">{i === 0 ? 'Tmrw' : `Day ${i + 2}`}</span>
-              <div className="bg-white/5 rounded-2xl p-2 border border-white/5">
-                <img src={`https://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png`} className="w-8 h-8 mx-auto" alt="icon" />
-                <span className="text-[10px] font-bold text-white block">{Math.round(day.main.temp)}°</span>
+          {forecast.map((day: OWMForecastItem, i: number) => {
+            const icon = day.weather[0]?.icon;
+            return (
+              <div key={i} className="text-center">
+                <span className="text-[9px] font-bold text-white/40 block mb-2">{i === 0 ? 'Tmrw' : `Day ${i + 2}`}</span>
+                <div className="bg-white/5 rounded-2xl p-2 border border-white/5">
+                  {icon && <img src={`https://openweathermap.org/img/wn/${icon}@2x.png`} className="w-8 h-8 mx-auto" alt="Forecast conditions" />}
+                  <span className="text-[10px] font-bold text-white block">{Math.round(day.main.temp)}°</span>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </motion.div>

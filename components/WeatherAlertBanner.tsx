@@ -1,29 +1,37 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AlertTriangle } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
+
+interface CurrentWeatherResponse {
+  main?: { temp?: number };
+}
 
 export const WeatherAlertBanner: React.FC = () => {
   const [temp, setTemp] = useState<number | null>(null);
 
   useEffect(() => {
-    const checkWeather = async () => {
-      const envKey = import.meta.env.VITE_WEATHER_API_KEY?.trim();
-      const apiKey = envKey || '904c1c69a07b07044e3156ced85b6a15';
-      if (!apiKey) return;
+    const controller = new AbortController();
 
+    const checkWeather = async (): Promise<void> => {
       try {
-        const res = await fetch(
-          `https://api.openweathermap.org/data/2.5/weather?q=Hanover,CA&units=metric&appid=${apiKey}`
-        );
-        if (res.ok) {
-          const data = await res.json();
+        const response = await fetch('/.netlify/functions/weather?city=Hanover%2CCA', {
+          signal: controller.signal,
+        });
+        if (!response.ok) return;
+
+        const data = (await response.json()) as CurrentWeatherResponse;
+        if (typeof data.main?.temp === 'number') {
           setTemp(data.main.temp);
         }
-      } catch (e) {
-        console.warn("Weather alert check failed", e);
+      } catch (error) {
+        if (!(error instanceof DOMException && error.name === 'AbortError')) {
+          console.warn('Weather alert check failed', error);
+        }
       }
     };
-    checkWeather();
+
+    void checkWeather();
+    return () => controller.abort();
   }, []);
 
   return (

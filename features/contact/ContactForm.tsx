@@ -21,24 +21,33 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
+const CELEBRATION_PARTICLES = Array.from({ length: 12 }, (_, index) => ({
+  id: index,
+  x: (((index * 73) % 101) - 50) * 4,
+  y: (((index * 47) % 101) - 50) * 4,
+  rotate: (index * 97) % 360,
+  size: 24 + (index % 4) * 6,
+  delay: index * 0.05,
+}));
+
 const SuccessCelebration: React.FC = () => {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden flex items-center justify-center">
-      {[...Array(12)].map((_, i) => (
+      {CELEBRATION_PARTICLES.map((particle) => (
         <motion.div
-          key={i}
+          key={particle.id}
           initial={{ scale: 0, opacity: 1, x: 0, y: 0 }}
-          animate={{ 
-            scale: [0, 1.5, 0], 
+          animate={{
+            scale: [0, 1.5, 0],
             opacity: [1, 1, 0],
-            x: (Math.random() - 0.5) * 400,
-            y: (Math.random() - 0.5) * 400,
-            rotate: Math.random() * 360
+            x: particle.x,
+            y: particle.y,
+            rotate: particle.rotate,
           }}
-          transition={{ duration: 1.5, ease: "easeOut", delay: i * 0.05 }}
+          transition={{ duration: 1.5, ease: 'easeOut', delay: particle.delay }}
           className="absolute text-brand"
         >
-          <Snowflake size={24 + Math.random() * 24} />
+          <Snowflake size={particle.size} />
         </motion.div>
       ))}
     </div>
@@ -55,9 +64,11 @@ export const ContactForm: React.FC = () => {
   });
 
   const onSubmit = async (data: FormData) => {
-    console.log('Event Tracked: Contact Form Submitted', data);
-    
-    // Sanitize all inputs to prevent XSS
+    if (data['bot-field']?.trim()) {
+      return;
+    }
+
+    // Sanitize all inputs to prevent XSS before serializing the form request.
     const sanitized = {
       name: DOMPurify.sanitize(data.name, { ALLOWED_TAGS: [] }),
       phone: DOMPurify.sanitize(data.phone, { ALLOWED_TAGS: [] }),
@@ -66,17 +77,17 @@ export const ContactForm: React.FC = () => {
       details: DOMPurify.sanitize(data.details || '', { ALLOWED_TAGS: [] }),
     };
     
-    const formData = new window.FormData();
-    formData.append('form-name', 'snow-pros-quote');
-    Object.entries(sanitized).forEach(([key, value]) => {
-      formData.append(key, value);
+    const encodedForm = new URLSearchParams({
+      'form-name': 'snow-pros-quote',
+      'bot-field': '',
+      ...sanitized,
     });
 
     try {
       const response = await fetch("/", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams(formData as Record<string, string>).toString(),
+        body: encodedForm.toString(),
       });
 
       if (!response.ok) {
@@ -124,7 +135,7 @@ export const ContactForm: React.FC = () => {
         <div className="relative z-10 space-y-8">
           <input type="hidden" name="form-name" value="snow-pros-quote" />
           <div className="hidden">
-            <label>Don’t fill this out if you’re human: <input name="bot-field" {...register("bot-field")} /></label>
+            <label>Don’t fill this out if you’re human: <input {...register('bot-field')} /></label>
           </div>
 
           <div className="flex items-center gap-4">

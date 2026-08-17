@@ -32,16 +32,12 @@ const App: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
   const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
   const [isTermsOpen, setIsTermsOpen] = useState(false);
-  const [is404, setIs404] = useState(false);
+  const [is404] = useState(() => window.location.pathname !== '/' && window.location.pathname !== '');
   const [showBackToTop, setShowBackToTop] = useState(false);
 
   const { isSnowing } = useDynamicSEO();
 
   useEffect(() => {
-    if (window.location.pathname !== '/' && window.location.pathname !== '') {
-      setIs404(true);
-    }
-
     // Setup global error handlers once on app mount
     setupGlobalErrorHandlers();
 

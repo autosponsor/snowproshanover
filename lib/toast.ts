@@ -25,6 +25,7 @@ class ToastManager {
 
   subscribe(listener: ToastListener): () => void {
     this.listeners.add(listener);
+    listener(this.getAll());
     return () => this.listeners.delete(listener);
   }
 
@@ -103,4 +104,6 @@ export const toast = {
   info: (msg: string, duration?: number) => toastManager.info(msg, duration),
   remove: (id: string) => toastManager.remove(id),
   clear: () => toastManager.clear(),
+  getAll: () => toastManager.getAll(),
+  subscribe: (listener: ToastListener) => toastManager.subscribe(listener),
 };

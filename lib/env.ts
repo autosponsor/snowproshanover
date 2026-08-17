@@ -6,8 +6,7 @@
 import { z } from 'zod';
 
 const envSchema = z.object({
-  // API Keys and Endpoints
-  VITE_WEATHER_API_KEY: z.string().optional(),
+  // Public browser configuration only. Server credentials are never exposed here.
   VITE_SENTRY_DSN: z.string().optional(),
   
   // App Configuration
@@ -32,9 +31,6 @@ export function getEnv(): Env {
       if (!import.meta.env.VITE_SENTRY_DSN) {
         console.warn('Warning: VITE_SENTRY_DSN not configured. Error monitoring disabled.');
       }
-      if (!import.meta.env.VITE_WEATHER_API_KEY) {
-        console.warn('Warning: VITE_WEATHER_API_KEY not configured. Weather widget will not function.');
-      }
     }
     
     return parsed;
@@ -54,10 +50,6 @@ export function getEnv(): Env {
 export const env = getEnv();
 
 // Type-safe access to individual variables
-export function getWeatherApiKey(): string | undefined {
-  return env.VITE_WEATHER_API_KEY;
-}
-
 export function getSentryDsn(): string | undefined {
   return env.VITE_SENTRY_DSN;
 }

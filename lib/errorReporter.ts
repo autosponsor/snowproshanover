@@ -43,9 +43,9 @@ function sendToMonitoring(report: ErrorReport): void {
   // Send to Sentry in production
   if (import.meta.env.MODE === 'production' && import.meta.env.VITE_SENTRY_DSN) {
     Sentry.captureException(report.error, {
-      level: report.severity as any,
+      level: report.severity === 'critical' ? 'fatal' : report.severity,
       contexts: {
-        app: report.context as Record<string, any>,
+        app: report.context,
       },
       tags: {
         message: report.message,
@@ -128,12 +128,6 @@ export function initializeSentry(): void {
       environment: import.meta.env.MODE,
       tracesSampleRate: 0.1,
       release: import.meta.env.VITE_APP_VERSION || '1.0.0',
-      integrations: [
-        new Sentry.Replay({
-          maskAllText: true,
-          blockAllMedia: true,
-        }),
-      ],
       beforeSend(event) {
         // Filter out certain errors if needed
         return event;

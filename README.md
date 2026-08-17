@@ -14,19 +14,26 @@ Professional residential and commercial snow clearing for Hanover, ON. This appl
 ## 🚀 Deployment Checklist
 
 ### 1. Environment Variables
-You **must** set the following environment variables in the Netlify Dashboard (**Site Settings > Environment variables**) to enable the live weather widget:
 
-| Key | Example Value | Description |
-|-----|---------------|-------------|
-| `VITE_WEATHER_API_KEY` | `432e73bbfd1d41b7b1841248261901` | Your WeatherAPI.com token |
+Set the following **server-only** variable in the Netlify dashboard under **Site settings → Environment variables**. The weather function is the only code that reads it; never expose this credential with a `VITE_` prefix or commit it to the repository.
 
-*Note: The application is configured to gracefully hide the weather widget if the key is missing.*
+| Key | Example value | Purpose |
+|---|---|---|
+| `OPENWEATHERMAP_API_KEY` | `your_openweathermap_api_key` | Authorizes the serverless weather function to retrieve weather for Hanover, ON. |
+
+> If the previous OpenWeatherMap key was ever committed or served to browsers, revoke it and create a replacement before deployment.
 
 ### 2. Netlify Build Configuration
-Ensure your Netlify site is configured with these settings:
-- **Build Command**: `npm run build`
-- **Publish Directory**: `dist`
-- **Node Version**: `20+`
+
+Ensure the site uses the following settings:
+
+| Setting | Value |
+|---|---|
+| Build command | `npm run verify` |
+| Publish directory | `dist` |
+| Node version | `22` |
+
+Netlify automatically discovers the static `snow-pros-quote` form supplied in `index.html`. After the next deployment, submit a real test lead and verify that it appears in **Forms** and reaches the configured notification destination.
 
 ### 3. Local Development
 ```bash
@@ -36,13 +43,13 @@ npm install
 # Start development server
 npm run dev
 
-# Build for production
-npm run build
+# Run the full local quality gate (lint, types, tests, production build)
+npm run verify
 ```
 
 ## ❄️ Business Operations
 
-- **Form Submissions**: Go to the "Forms" tab in your Netlify dashboard to see quotes.
+- **Form Submissions**: Go to the **Forms** tab in the Netlify dashboard to see quotes, then confirm the notification destination after every form-configuration change.
 - **Service Updates**: Update `features/gallery/Gallery.tsx` to refresh the proof-of-work photos.
 - **Privacy/Terms**: Modals are editable within `App.tsx` to match local legal requirements.
 

@@ -5,10 +5,10 @@ import './index.css';
 
 // Monitor Core Web Vitals
 if (import.meta.env.MODE === 'production') {
-  (async () => {
-    const { onCLS, onFID, onFCP, onLCP, onTTFB } = await import('web-vitals');
+  void (async () => {
+    const { onCLS, onFCP, onINP, onLCP, onTTFB } = await import('web-vitals');
     onCLS(console.log);
-    onFID?.(console.log);
+    onINP(console.log);
     onFCP(console.log);
     onLCP(console.log);
     onTTFB(console.log);

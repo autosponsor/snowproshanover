@@ -20,17 +20,10 @@ const WeatherWidget: React.FC = () => {
 
   useEffect(() => {
     const fetchWeather = async () => {
-      const envKey = import.meta.env.VITE_WEATHER_API_KEY?.trim();
-      const apiKey = envKey || '904c1c69a07b07044e3156ced85b6a15';
-      
-      if (!apiKey) {
-        setLoading(false);
-        return;
-      }
       try {
         const [currentRes, forecastRes] = await Promise.all([
-          fetch(`https://api.openweathermap.org/data/2.5/weather?q=Hanover,CA&units=metric&appid=${apiKey}`),
-          fetch(`https://api.openweathermap.org/data/2.5/forecast?q=Hanover,CA&units=metric&appid=${apiKey}`)
+          fetch('/.netlify/functions/weather?city=Hanover,CA'),
+          fetch('/.netlify/functions/weather?city=Hanover,CA&forecast=true')
         ]);
 
         if (currentRes.ok) {

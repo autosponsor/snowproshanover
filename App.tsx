@@ -16,8 +16,9 @@ import { MobileCallButton, BackToTopButton } from './components/FloatingButtons'
 import { useDynamicSEO } from './hooks/useDynamicSEO';
 import { TestimonialSlider } from './components/TestimonialSlider';
 import { SEOMetadata } from './components/SEOMetadata';
-
 import { WeatherAlertBanner } from './components/WeatherAlertBanner';
+import { ToastContainer } from './components/ToastContainer';
+import { setupGlobalErrorHandlers } from './lib/errorReporter';
 
 const App: React.FC = () => {
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
@@ -33,6 +34,9 @@ const App: React.FC = () => {
     if (window.location.pathname !== '/' && window.location.pathname !== '') {
       setIs404(true);
     }
+
+    // Setup global error handlers once on app mount
+    setupGlobalErrorHandlers();
 
     const handleOnline = () => setIsOffline(false);
     const handleOffline = () => setIsOffline(true);
@@ -85,6 +89,7 @@ const App: React.FC = () => {
 
           <MobileCallButton />
           <BackToTopButton show={showBackToTop} />
+          <ToastContainer />
         </div>
       </ErrorBoundary>
     </HelmetProvider>

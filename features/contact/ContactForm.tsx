@@ -5,7 +5,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle, Loader2, Sparkles, Snowflake, Mail } from 'lucide-react';
+import DOMPurify from 'dompurify';
 import { cn } from '../../lib/utils';
+import { toast } from '../../lib/toast';
+import { reportError } from '../../lib/errorReporter';
 
 const schema = z.object({
   name: z.string().min(2, "We need your name to address you"),
@@ -54,24 +57,41 @@ export const ContactForm: React.FC = () => {
   const onSubmit = async (data: FormData) => {
     console.log('Event Tracked: Contact Form Submitted', data);
     
+    // Sanitize all inputs to prevent XSS
+    const sanitized = {
+      name: DOMPurify.sanitize(data.name, { ALLOWED_TAGS: [] }),
+      phone: DOMPurify.sanitize(data.phone, { ALLOWED_TAGS: [] }),
+      address: DOMPurify.sanitize(data.address, { ALLOWED_TAGS: [] }),
+      serviceType: DOMPurify.sanitize(data.serviceType, { ALLOWED_TAGS: [] }),
+      details: DOMPurify.sanitize(data.details || '', { ALLOWED_TAGS: [] }),
+    };
+    
     const formData = new window.FormData();
     formData.append('form-name', 'snow-pros-quote');
-    Object.entries(data).forEach(([key, value]) => {
-      formData.append(key, (value as string) || '');
+    Object.entries(sanitized).forEach(([key, value]) => {
+      formData.append(key, value);
     });
 
     try {
-      await fetch("/", {
+      const response = await fetch("/", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams(formData as any).toString(),
+        body: new URLSearchParams(formData as Record<string, string>).toString(),
       });
+
+      if (!response.ok) {
+        throw new Error(`Form submission failed with status ${response.status}`);
+      }
+
       setSuccess(true);
+      toast.success('Quote request received! Our team will contact you soon.');
       reset();
       setTimeout(() => setSuccess(false), 8000);
     } catch (error) {
-      console.error(error);
-      alert("Submission error. Please call (647) 450-0225 for immediate service.");
+      const errorObj = error instanceof Error ? error : new Error(String(error));
+      console.error('Form submission error:', errorObj);
+      reportError('Contact form submission failed', errorObj, { formData: data });
+      toast.error('We encountered an issue submitting your request. Please call (647) 450-0225 for immediate service.');
     }
   };
 
@@ -116,62 +136,83 @@ export const ContactForm: React.FC = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
             <div className="space-y-2">
-              <label className="block text-[10px] font-black text-white/40 uppercase tracking-[0.3em]">Your Name</label>
+              <label htmlFor="name" className="block text-[10px] font-black text-white/40 uppercase tracking-[0.3em]">Your Name</label>
               <input 
                 {...register("name")}
+                id="name"
                 name="name"
+                type="text"
                 autoComplete="name"
                 placeholder="Full Name"
+                aria-label="Your full name"
+                aria-describedby={errors.name ? "name-error" : undefined}
                 className={cn(
                   "w-full bg-white/5 border rounded-2xl p-5 text-white placeholder:text-white/20 outline-none transition-all focus:ring-2 text-sm md:text-base",
                   errors.name ? 'border-red-500/50 ring-red-500/20' : 'border-white/10 focus:ring-brand focus:border-brand'
                 )}
               />
+              {errors.name && (
+                <p id="name-error" className="text-red-400 text-xs" role="alert">{errors.name.message}</p>
+              )}
             </div>
 
             <div className="space-y-2">
-              <label className="block text-[10px] font-black text-white/40 uppercase tracking-[0.3em]">Contact Phone</label>
+              <label htmlFor="phone" className="block text-[10px] font-black text-white/40 uppercase tracking-[0.3em]">Contact Phone</label>
               <input 
                 {...register("phone")}
+                id="phone"
                 name="phone"
                 type="tel"
                 autoComplete="tel"
                 placeholder="(647) 000-0000"
+                aria-label="Contact phone number"
+                aria-describedby={errors.phone ? "phone-error" : undefined}
                 className={cn(
                   "w-full bg-white/5 border rounded-2xl p-5 text-white placeholder:text-white/20 outline-none transition-all focus:ring-2 text-sm md:text-base",
                   errors.phone ? 'border-red-500/50 ring-red-500/20' : 'border-white/10 focus:ring-brand focus:border-brand'
                 )}
               />
+              {errors.phone && (
+                <p id="phone-error" className="text-red-400 text-xs" role="alert">{errors.phone.message}</p>
+              )}
             </div>
           </div>
 
           <div className="space-y-2">
-            <label className="block text-[10px] font-black text-white/40 uppercase tracking-[0.3em]">Hanover Address</label>
+            <label htmlFor="address" className="block text-[10px] font-black text-white/40 uppercase tracking-[0.3em]">Hanover Address</label>
             <input 
               {...register("address")}
+              id="address"
               name="address"
+              type="text"
               autoComplete="street-address"
               placeholder="Street, Town, ON"
+              aria-label="Property address in Hanover"
+              aria-describedby={errors.address ? "address-error" : undefined}
               className={cn(
                 "w-full bg-white/5 border rounded-2xl p-5 text-white placeholder:text-white/20 outline-none transition-all focus:ring-2 text-sm md:text-base",
                 errors.address ? 'border-red-500/50 ring-red-500/20' : 'border-white/10 focus:ring-brand focus:border-brand'
               )}
             />
+            {errors.address && (
+              <p id="address-error" className="text-red-400 text-xs" role="alert">{errors.address.message}</p>
+            )}
           </div>
 
-          <div className="space-y-4">
-            <label className="block text-[10px] font-black text-white/40 uppercase tracking-[0.3em]">Priority Level</label>
+          <fieldset className="space-y-4">
+            <legend className="block text-[10px] font-black text-white/40 uppercase tracking-[0.3em]">Priority Level</legend>
             <div className="grid grid-cols-3 gap-3">
               {['Residential', 'Commercial', 'Emergency'].map((type) => (
                 <label key={type} className="relative cursor-pointer group">
                   <input 
                     type="radio" 
                     {...register("serviceType")} 
-                    value={type.toLowerCase()} 
+                    value={type.toLowerCase()}
+                    aria-label={`${type} service priority`}
                     className="peer sr-only" 
                   />
                   <div className={cn(
-                    "border border-white/10 rounded-2xl p-4 text-center text-[10px] font-black text-white/40 transition-all uppercase tracking-widest leading-none flex items-center justify-center min-h-[60px] glass hover:bg-white/10",
+                    "border border-white/10 rounded-2xl p-4 text-center text-[10px] font-black text-white/40 transition-all uppercase tracking-widest leading-none flex items-center justify-center min-h-[60px] glass hover:bg-white/10 focus-within:ring-2 focus-within:ring-brand",
                     "peer-checked:bg-brand peer-checked:border-brand peer-checked:text-white peer-checked:shadow-lg shadow-brand/20"
                   )}>
                     {type}
@@ -179,14 +220,16 @@ export const ContactForm: React.FC = () => {
                 </label>
               ))}
             </div>
-          </div>
+          </fieldset>
 
           <div className="space-y-2">
-            <label className="block text-[10px] font-black text-white/40 uppercase tracking-[0.3em]">Special Requirements</label>
+            <label htmlFor="details" className="block text-[10px] font-black text-white/40 uppercase tracking-[0.3em]">Special Requirements</label>
             <textarea 
               {...register("details")}
+              id="details"
               name="details"
               placeholder="Gravel driveway, gate code, or specific instructions..."
+              aria-label="Special requirements or notes for the service"
               rows={3}
               className="w-full bg-white/5 border border-white/10 rounded-2xl p-5 text-white placeholder:text-white/20 outline-none focus:ring-2 focus:ring-brand transition-all resize-none text-sm md:text-base"
             />
@@ -196,16 +239,18 @@ export const ContactForm: React.FC = () => {
             <button 
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-brand hover:bg-brand-hover text-white font-black py-5 rounded-[1.5rem] shadow-xl transition-all transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-3 text-xs uppercase tracking-[0.3em]"
+              aria-busy={isSubmitting}
+              className="w-full bg-brand hover:bg-brand-hover text-white font-black py-5 rounded-[1.5rem] shadow-xl transition-all transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-3 text-xs uppercase tracking-[0.3em] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand disabled:opacity-75 disabled:cursor-not-allowed"
             >
-              {isSubmitting ? <Loader2 className="animate-spin" size={20} /> : "Confirm Quote Request"}
+              {isSubmitting ? <Loader2 className="animate-spin" size={20} aria-hidden="true" /> : "Confirm Quote Request"}
             </button>
             <button 
               type="button"
               onClick={handleMailto}
-              className="w-full bg-transparent hover:bg-white/5 border border-white/10 text-white font-bold py-4 rounded-[1.5rem] transition-all flex items-center justify-center gap-2 text-xs uppercase tracking-[0.2em]"
+              className="w-full bg-transparent hover:bg-white/5 border border-white/10 text-white font-bold py-4 rounded-[1.5rem] transition-all flex items-center justify-center gap-2 text-xs uppercase tracking-[0.2em] focus:outline-none focus:ring-2 focus:ring-brand"
+              aria-label="Send quote request via email"
             >
-              <Mail size={16} /> Prefer Email? Send direct via Mail App
+              <Mail size={16} aria-hidden="true" /> Prefer Email? Send direct via Mail App
             </button>
           </div>
         </div>

@@ -294,18 +294,17 @@ All 25 audit issues have been systematically addressed. The codebase now meets *
 
 ### Production Build Output
 ```
-✓ 2370 modules transformed
-✓ Built in 47.64s
+✓ 2020 modules transformed
+✓ Built in 0.93s
 
 Bundle Size:
-├── Main JS:          540.48 KB (168.19 KB gzipped)
-├── Styles:            56.99 KB (10.28 KB gzipped)
-├── Gallery (lazy):    10.67 KB (4.02 KB gzipped)
-├── Web-Vitals:         6.80 KB (2.58 KB gzipped)
-├── Testimonials:       0.04 KB (0.06 KB gzipped)
-└── HTML:               4.83 KB (1.87 KB gzipped)
-
-Total: ~620 KB (187 KB gzipped)
+├── Main JS:             406.71 KB (128.55 KB gzipped)
+├── Contact section:     122.17 KB (36.31 KB gzipped, lazy)
+├── Styles:               30.84 KB (5.93 KB gzipped)
+├── Gallery (lazy):       10.67 KB (4.01 KB gzipped)
+├── Web Vitals (lazy):     8.64 KB (3.23 KB gzipped)
+├── Testimonials:           0.04 KB (0.06 KB gzipped)
+└── HTML:                   5.22 KB (1.99 KB gzipped)
 ```
 
 ### Code Quality Metrics

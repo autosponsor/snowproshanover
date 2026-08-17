@@ -3,14 +3,38 @@
  * Centralized error logging and reporting
  */
 
-import * as Sentry from '@sentry/react';
-
 interface ErrorReport {
   message: string;
   error: Error;
   context?: Record<string, unknown>;
   timestamp: string;
   severity: 'info' | 'warning' | 'error' | 'critical';
+}
+
+type SentryModule = typeof import('@sentry/react');
+
+let sentryModulePromise: Promise<SentryModule> | undefined;
+
+function loadSentry(): Promise<SentryModule> | undefined {
+  const sentryDsn = import.meta.env.VITE_SENTRY_DSN;
+  if (!sentryDsn || import.meta.env.MODE !== 'production') {
+    return undefined;
+  }
+
+  sentryModulePromise ??= import('@sentry/react').then((Sentry) => {
+    Sentry.init({
+      dsn: sentryDsn,
+      environment: import.meta.env.MODE,
+      tracesSampleRate: 0.1,
+      release: import.meta.env.VITE_APP_VERSION || '1.0.0',
+      beforeSend(event) {
+        return event;
+      },
+    });
+    return Sentry;
+  });
+
+  return sentryModulePromise;
 }
 
 /**
@@ -40,8 +64,8 @@ function logToConsole(report: ErrorReport): void {
  * Send error to remote monitoring service (Sentry)
  */
 function sendToMonitoring(report: ErrorReport): void {
-  // Send to Sentry in production
-  if (import.meta.env.MODE === 'production' && import.meta.env.VITE_SENTRY_DSN) {
+  // Load Sentry only when it is configured for production monitoring.
+  void loadSentry()?.then((Sentry) => {
     Sentry.captureException(report.error, {
       level: report.severity === 'critical' ? 'fatal' : report.severity,
       contexts: {
@@ -51,7 +75,7 @@ function sendToMonitoring(report: ErrorReport): void {
         message: report.message,
       },
     });
-  }
+  });
 
   // Also keep console logging for development
   const entry = {
@@ -120,20 +144,7 @@ export function reportCritical(
  * Initialize Sentry error reporting
  */
 export function initializeSentry(): void {
-  const sentryDsn = import.meta.env.VITE_SENTRY_DSN;
-  
-  if (sentryDsn && import.meta.env.MODE === 'production') {
-    Sentry.init({
-      dsn: sentryDsn,
-      environment: import.meta.env.MODE,
-      tracesSampleRate: 0.1,
-      release: import.meta.env.VITE_APP_VERSION || '1.0.0',
-      beforeSend(event) {
-        // Filter out certain errors if needed
-        return event;
-      },
-    });
-  }
+  void loadSentry();
 }
 
 /**

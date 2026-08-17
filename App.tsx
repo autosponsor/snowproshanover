@@ -9,7 +9,6 @@ import { Navigation } from './components/Navigation';
 import { Footer } from './components/Footer';
 import { TrustBanner } from './components/TrustBanner';
 import { ServicesSection } from './features/landing/ServicesSection';
-import { ContactSection } from './features/contact/ContactSection';
 import { OfflineBanner } from './components/OfflineBanner';
 import { MobileCallButton, BackToTopButton } from './components/FloatingButtons';
 import { useDynamicSEO } from './hooks/useDynamicSEO';
@@ -21,6 +20,7 @@ import { setupGlobalErrorHandlers } from './lib/errorReporter';
 // Lazy-loaded components for better initial load performance
 const Gallery = lazy(() => import('./features/gallery/Gallery').then(m => ({ default: m.Gallery })));
 const TestimonialSlider = lazy(() => import('./components/TestimonialSlider').then(m => ({ default: m.TestimonialSlider })));
+const ContactSection = lazy(() => import('./features/contact/ContactSection').then(m => ({ default: m.ContactSection })));
 
 // Loading placeholder component
 const SectionLoadingPlaceholder: React.FC = () => (
@@ -86,7 +86,9 @@ const App: React.FC = () => {
             <Suspense fallback={<SectionLoadingPlaceholder />}>
               <TestimonialSlider />
             </Suspense>
-            <ContactSection />
+            <Suspense fallback={<SectionLoadingPlaceholder />}>
+              <ContactSection />
+            </Suspense>
           </main>
 
           <Footer 

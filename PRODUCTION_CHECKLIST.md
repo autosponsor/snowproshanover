@@ -17,7 +17,7 @@ This checklist ensures the application meets production-ready standards with 100
 
 ### Core Functionality
 - [x] Toast notification system fully functional (shows success/error/warning/info)
-- [x] API key (VITE_WEATHER_API_KEY) removed from client-side code
+- [x] API key moved to the server-only OPENWEATHERMAP_API_KEY variable
 - [x] Weather API calls through backend proxy (/.netlify/functions/weather)
 - [x] Sentry error monitoring integrated and configured
 - [x] Schema injection functions implemented (injectSchemas, generateOrganizationSchema)
@@ -184,7 +184,7 @@ This checklist ensures the application meets production-ready standards with 100
 ### Required Environment Variables
 ```bash
 # In Netlify Environment Variables:
-VITE_WEATHER_API_KEY=<actual-api-key>
+OPENWEATHERMAP_API_KEY=<actual-api-key>
 VITE_SENTRY_DSN=<actual-sentry-dsn>
 VITE_APP_VERSION=<version-number>
 ```
@@ -192,7 +192,7 @@ VITE_APP_VERSION=<version-number>
 ### Netlify Configuration
 ```bash
 # Verify netlify.toml has:
-- Correct build command: npm run build
+- Correct build command: npm run verify
 - Correct publish directory: dist
 - Security headers configured (CSP, X-Frame-Options, etc.)
 - Redirects configured for SPA routing
@@ -208,7 +208,7 @@ VITE_APP_VERSION=<version-number>
 - [ ] Sentry project created and DSN configured
 - [ ] Sentry alerts configured for critical errors
 - [ ] Sentry team members invited
-- [ ] Sentry replay session recording enabled
+- [ ] Sentry monitoring alerts configured for captured production errors
 
 ### Analytics (Optional)
 - [ ] Google Analytics configured if needed
@@ -224,8 +224,8 @@ VITE_APP_VERSION=<version-number>
 # Update version number
 npm version patch  # or minor/major
 
-# Run full test suite
-npm run build
+# Run the full quality gate
+npm run verify
 npm run preview
 
 # Final verification
@@ -260,7 +260,7 @@ git push origin main
 - [x] No sensitive data in localStorage/cookies (except session tokens)
 - [x] API responses validated
 - [x] CORS configured correctly
-- [x] Rate limiting enabled on backend functions
+- [x] Weather function only permits the Hanover service-area location
 
 ### Input Validation
 - [x] Client-side validation (Zod schemas)

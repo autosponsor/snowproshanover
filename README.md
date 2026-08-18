@@ -1,50 +1,40 @@
 
-# ❄️ Snow Pros Hanover - Production Environment
+# ❄️ Snow Pros Hanover
 
-Professional residential and commercial snow clearing for Hanover, ON. This application is optimized for high-performance deployment on Netlify.
+Professional residential and commercial snow clearing for Hanover, Ontario. The site is a static, high-performance Netlify application built with semantic HTML5, Tailwind CSS, and focused vanilla JavaScript.
 
-## 🛠 Project Structure
+## Project structure
 
-- **Frontend**: React 19 + Vite 6
-- **Styling**: Tailwind CSS 3 (Build-time PostCSS pipeline)
-- **Animations**: Framer Motion
-- **Icons**: Lucide React
-- **Forms**: Netlify Forms (Anti-spam protection enabled)
+| Area | Location | Purpose |
+|---|---|---|
+| Page markup | `index.html` | Content, metadata, structured data, and Netlify form detection. |
+| Browser behavior | `src/main.js` | Navigation, modal, consent, gallery, form, and cached weather interactions. |
+| Styles | `src/styles.css` | Tailwind layers and site-specific component styles. |
+| Weather service | `netlify/functions/weather.js` | Server-side OpenWeatherMap proxy with input controls and caching. |
+| Quality controls | `.github/workflows/quality.yml` | Linting, tests, build, bundle budget, and dependency-audit checks. |
 
-## 🚀 Deployment Checklist
+## Deployment checklist
 
-### 1. Environment Variables
-You **must** set the following environment variables in the Netlify Dashboard (**Site Settings > Environment variables**) to enable the live weather widget:
+Set `OPENWEATHERMAP_API_KEY` as a **server-only** Netlify environment variable. The weather function is the only code that reads it. Never use a `VITE_` prefix for this key or commit a real credential.
 
-| Key | Example Value | Description |
-|-----|---------------|-------------|
-| `VITE_WEATHER_API_KEY` | `432e73bbfd1d41b7b1841248261901` | Your WeatherAPI.com token |
+| Setting | Value |
+|---|---|
+| Build command | `npm run build` |
+| Publish directory | `dist` |
+| Node version | `22` |
 
-*Note: The application is configured to gracefully hide the weather widget if the key is missing.*
+Netlify discovers the static `snow-pros-quote` form in `index.html`. After deployment, submit a real test request and verify it appears in **Forms** and reaches the configured notification destination.
 
-### 2. Netlify Build Configuration
-Ensure your Netlify site is configured with these settings:
-- **Build Command**: `npm run build`
-- **Publish Directory**: `dist`
-- **Node Version**: `20+`
+## Local development
 
-### 3. Local Development
 ```bash
-# Install dependencies
-npm install
-
-# Start development server
+npm ci
 npm run dev
-
-# Build for production
-npm run build
+npm run verify
 ```
 
-## ❄️ Business Operations
+The full quality gate runs ESLint, unit tests, Playwright end-to-end tests, a production build, a JavaScript bundle budget, and a production dependency audit.
 
-- **Form Submissions**: Go to the "Forms" tab in your Netlify dashboard to see quotes.
-- **Service Updates**: Update `features/gallery/Gallery.tsx` to refresh the proof-of-work photos.
-- **Privacy/Terms**: Modals are editable within `App.tsx` to match local legal requirements.
+## Operations
 
----
-*Developed for Snow Pros Hanover - Industrial Strength Reliability.*
+Form submissions are available in the Netlify **Forms** dashboard. Update page content in `index.html`, browser interactions in `src/main.js`, and styles in `src/styles.css`. The production security headers are defined in `netlify.toml`.

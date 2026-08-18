@@ -1,57 +1,40 @@
 
-# ❄️ Snow Pros Hanover - Production Environment
+# ❄️ Snow Pros Hanover
 
-Professional residential and commercial snow clearing for Hanover, ON. This application is optimized for high-performance deployment on Netlify.
+Professional residential and commercial snow clearing for Hanover, Ontario. The site is a static, high-performance Netlify application built with semantic HTML5, Tailwind CSS, and focused vanilla JavaScript.
 
-## 🛠 Project Structure
+## Project structure
 
-- **Frontend**: React 19 + Vite 6
-- **Styling**: Tailwind CSS 3 (Build-time PostCSS pipeline)
-- **Animations**: Framer Motion
-- **Icons**: Lucide React
-- **Forms**: Netlify Forms (Anti-spam protection enabled)
-
-## 🚀 Deployment Checklist
-
-### 1. Environment Variables
-
-Set the following **server-only** variable in the Netlify dashboard under **Site settings → Environment variables**. The weather function is the only code that reads it; never expose this credential with a `VITE_` prefix or commit it to the repository.
-
-| Key | Example value | Purpose |
+| Area | Location | Purpose |
 |---|---|---|
-| `OPENWEATHERMAP_API_KEY` | `your_openweathermap_api_key` | Authorizes the serverless weather function to retrieve weather for Hanover, ON. |
+| Page markup | `index.html` | Content, metadata, structured data, and Netlify form detection. |
+| Browser behavior | `src/main.js` | Navigation, modal, consent, gallery, form, and cached weather interactions. |
+| Styles | `src/styles.css` | Tailwind layers and site-specific component styles. |
+| Weather service | `netlify/functions/weather.js` | Server-side OpenWeatherMap proxy with input controls and caching. |
+| Quality controls | `.github/workflows/quality.yml` | Linting, tests, build, bundle budget, and dependency-audit checks. |
 
-> If the previous OpenWeatherMap key was ever committed or served to browsers, revoke it and create a replacement before deployment.
+## Deployment checklist
 
-### 2. Netlify Build Configuration
-
-Ensure the site uses the following settings:
+Set `OPENWEATHERMAP_API_KEY` as a **server-only** Netlify environment variable. The weather function is the only code that reads it. Never use a `VITE_` prefix for this key or commit a real credential.
 
 | Setting | Value |
 |---|---|
-| Build command | `npm run verify` |
+| Build command | `npm run build` |
 | Publish directory | `dist` |
 | Node version | `22` |
 
-Netlify automatically discovers the static `snow-pros-quote` form supplied in `index.html`. After the next deployment, submit a real test lead and verify that it appears in **Forms** and reaches the configured notification destination.
+Netlify discovers the static `snow-pros-quote` form in `index.html`. After deployment, submit a real test request and verify it appears in **Forms** and reaches the configured notification destination.
 
-### 3. Local Development
+## Local development
+
 ```bash
-# Install dependencies
-npm install
-
-# Start development server
+npm ci
 npm run dev
-
-# Run the full local quality gate (lint, types, tests, production build)
 npm run verify
 ```
 
-## ❄️ Business Operations
+The full quality gate runs ESLint, unit tests, Playwright end-to-end tests, a production build, a JavaScript bundle budget, and a production dependency audit.
 
-- **Form Submissions**: Go to the **Forms** tab in the Netlify dashboard to see quotes, then confirm the notification destination after every form-configuration change.
-- **Service Updates**: Update `features/gallery/Gallery.tsx` to refresh the proof-of-work photos.
-- **Privacy/Terms**: Modals are editable within `App.tsx` to match local legal requirements.
+## Operations
 
----
-*Developed for Snow Pros Hanover - Industrial Strength Reliability.*
+Form submissions are available in the Netlify **Forms** dashboard. Update page content in `index.html`, browser interactions in `src/main.js`, and styles in `src/styles.css`. The production security headers are defined in `netlify.toml`.

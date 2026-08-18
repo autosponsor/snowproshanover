@@ -1,32 +1,8 @@
 import js from '@eslint/js';
-import globals from 'globals';
-import reactHooks from 'eslint-plugin-react-hooks';
-import reactRefresh from 'eslint-plugin-react-refresh';
-import tseslint from 'typescript-eslint';
 
-export default tseslint.config(
-  {
-    ignores: ['dist/**', 'node_modules/**', 'coverage/**'],
-  },
+export default [
+  { ignores: ['dist/**', 'node_modules/**'] },
   js.configs.recommended,
-  ...tseslint.configs.recommended,
-  {
-    files: ['**/*.{ts,tsx,js,mjs,cjs}'],
-    languageOptions: {
-      ecmaVersion: 2022,
-      sourceType: 'module',
-      globals: {
-        ...globals.browser,
-        ...globals.node,
-      },
-    },
-    plugins: {
-      'react-hooks': reactHooks,
-      'react-refresh': reactRefresh,
-    },
-    rules: {
-      ...reactHooks.configs.recommended.rules,
-      'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
-    },
-  },
-);
+  { files: ['src/**/*.js', 'scripts/**/*.mjs'], languageOptions: { ecmaVersion: 2022, sourceType: 'module', globals: { window: 'readonly', document: 'readonly', localStorage: 'readonly', fetch: 'readonly', FormData: 'readonly', URLSearchParams: 'readonly', Intl: 'readonly', console: 'readonly', setTimeout: 'readonly' } }, rules: { 'no-unused-vars': ['error', { argsIgnorePattern: '^_' }] } },
+  { files: ['netlify/functions/**/*.js', 'tests/**/*.js', 'scripts/**/*.mjs', 'playwright.config.js'], languageOptions: { ecmaVersion: 2022, sourceType: 'module', globals: { process: 'readonly', fetch: 'writable', AbortController: 'readonly', URLSearchParams: 'readonly', setTimeout: 'readonly', clearTimeout: 'readonly', console: 'readonly', global: 'readonly' } } },
+];

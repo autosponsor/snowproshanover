@@ -1,105 +1,131 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Snow Pros Hanover | #1 Snow Removal & Plowing in Hanover, ON</title>
-    <meta name="description" content="Hanover's premier residential & commercial snow removal service. 24/7 priority plowing, ice management, and before/after photo proof. Trusted reliability for the Hanover community.">
-    <meta name="keywords" content="snow removal hanover ontario, driveway plowing hanover, commercial snow removal hanover, ice management hanover, local snow plow hanover">
-    
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://snowproshanover.ca/">
-    <meta property="og:title" content="Snow Pros Hanover | Industrial-Grade Snow Removal">
-    <meta property="og:description" content="Reliable 24/7 snow clearing for Hanover residents and businesses. Awake before the world stirs. Get your quote today.">
-    <meta property="og:image" content="https://i.ytimg.com/vi/ERrg_QkATwg/maxresdefault.jpg">
-
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://snowproshanover.ca/">
-    <meta property="twitter:title" content="Snow Pros Hanover | Reliable Plowing">
-    <meta property="twitter:description" content="Hanover's most trusted residential snow removal partner. 24/7 priority emergency plowing.">
-    <meta property="twitter:image" content="https://i.ytimg.com/vi/ERrg_QkATwg/maxresdefault.jpg">
-
-    <!-- Favicon -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>❄️</text></svg>">
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- FAQ Schema Markup -->
+    <meta name="theme-color" content="#f97316" />
+    <meta name="description" content="Reliable residential and commercial snow removal, ice management, and emergency service in Hanover, Ontario." />
+    <link rel="canonical" href="https://snowproshanover.ca/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://snowproshanover.ca/" />
+    <meta property="og:title" content="Snow Pros Hanover | Reliable Snow Removal" />
+    <meta property="og:description" content="Reliable residential and commercial snow removal, ice management, and emergency service in Hanover, Ontario." />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1478265409131-1f65c88f965c?auto=format&fit=crop&q=85&w=1200" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9D%84%EF%B8%8F%3C/text%3E%3C/svg%3E" />
+    <title>Snow Pros Hanover | Snow Removal &amp; Plowing</title>
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "How does the 2-inch trigger policy work?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Our standard service is activated when snow accumulation reaches 2 inches (5 cm) at our Hanover dispatch center. We constantly monitor local weather conditions to ensure our crews are ready."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Do I need to call you when it snows?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "No, our service is entirely automatic! Once the 2-inch trigger is met, SnowPros crews are dispatched automatically to your property. You don't need to lift a finger or make a phone call."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "How do I know the job was completed?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Transparency is core to our operations. We provide timestamped photographs upon the completion of every job, so you have visual confirmation that your property is clear and safe."
-          }
-        }
-      ]
-    }
+      {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        "name": "Snow Pros Hanover",
+        "description": "Residential and commercial snow removal, ice management, and emergency winter services in Hanover, Ontario.",
+        "url": "https://snowproshanover.ca/",
+        "telephone": "+1-647-450-0225",
+        "email": "snowpros@contractor.net",
+        "address": { "@type": "PostalAddress", "addressLocality": "Hanover", "addressRegion": "ON", "addressCountry": "CA" },
+        "areaServed": "Hanover, Ontario"
+      }
     </script>
-    
-    <!-- Progressive Web App Meta Tags -->
-    <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#f97316">
-    <meta name="msapplication-TileColor" content="#f97316">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="SnowPros">
-    <link rel="apple-touch-icon" href="/images/icon-192.png">
-    
-  <script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@^19.2.4",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
-    "react/": "https://esm.sh/react@^19.2.4/",
-    "lucide-react": "https://esm.sh/lucide-react@^0.563.0",
-    "zod": "https://esm.sh/zod@^4.3.6",
-    "react-hook-form": "https://esm.sh/react-hook-form@^7.71.1",
-    "@hookform/resolvers/": "https://esm.sh/@hookform/resolvers@^5.2.2/",
-    "clsx": "https://esm.sh/clsx@^2.1.1",
-    "framer-motion": "https://esm.sh/framer-motion@^12.34.0",
-    "tailwind-merge": "https://esm.sh/tailwind-merge@^3.4.0"
-  }
-}
-</script>
-</head>
-  <body>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {"@type":"Question","name":"How does the 2-inch trigger policy work?","acceptedAnswer":{"@type":"Answer","text":"Service begins when snow accumulation reaches 2 inches at our Hanover dispatch center. We monitor conditions and prepare crews for the event."}},
+          {"@type":"Question","name":"Do I need to call when it snows?","acceptedAnswer":{"@type":"Answer","text":"Scheduled clients are serviced automatically when their plan is activated. Emergency requests can be made by phone."}},
+          {"@type":"Question","name":"How do I know the job was completed?","acceptedAnswer":{"@type":"Answer","text":"Ask the team about completion confirmation and photo documentation for your service plan."}}
+        ]
+      }
+    </script>
+  </head>
+  <body class="bg-snow-50 text-navy-900 antialiased">
+    <a class="skip-link" href="#main-content">Skip to content</a>
     <div class="grain-overlay" aria-hidden="true"></div>
-    <div id="root"></div>
-    <form name="snow-pros-quote" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" hidden>
-      <input type="hidden" name="form-name" value="snow-pros-quote" />
-      <input name="bot-field" />
-      <input name="name" />
-      <input name="phone" />
-      <input name="address" />
-      <input name="serviceType" />
-      <textarea name="details"></textarea>
-    </form>
-    <script type="module" src="/index.tsx"></script>
+
+    <header class="site-header" data-header>
+      <div class="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 lg:px-8">
+        <a href="#top" class="flex items-center gap-3" aria-label="Snow Pros Hanover home">
+          <span class="grid h-10 w-10 place-items-center rounded-2xl bg-brand text-xl shadow-lg shadow-brand/30" aria-hidden="true">❄</span>
+          <span class="font-display text-lg font-bold tracking-tight text-white sm:text-xl">SNOW<span class="text-brand">PROS</span></span>
+        </a>
+        <nav class="hidden items-center gap-7 text-xs font-black uppercase tracking-[0.18em] text-white/75 lg:flex" aria-label="Primary navigation">
+          <a href="#services" class="nav-link">Services</a>
+          <a href="#gallery" class="nav-link">Our work</a>
+          <a href="#contact" class="nav-link">Contact</a>
+        </nav>
+        <div class="hidden lg:block"><a href="#contact" class="button button-brand">Request quote <span aria-hidden="true">→</span></a></div>
+        <button class="menu-toggle lg:hidden" type="button" aria-expanded="false" aria-controls="mobile-menu" data-menu-toggle><span></span><span></span><span></span><span class="sr-only">Toggle navigation</span></button>
+      </div>
+      <nav id="mobile-menu" class="mobile-menu" aria-label="Mobile navigation" data-mobile-menu hidden>
+        <a href="#services">Services</a><a href="#gallery">Our work</a><a href="#contact">Contact</a><a class="button button-brand mt-3" href="#contact">Request quote →</a>
+      </nav>
+    </header>
+
+    <main id="main-content">
+      <section id="top" class="hero-section">
+        <div class="hero-image" aria-hidden="true"></div><div class="hero-shade" aria-hidden="true"></div>
+        <div class="relative mx-auto grid min-h-[100svh] max-w-7xl items-center gap-12 px-5 pb-16 pt-28 lg:grid-cols-12 lg:px-8">
+          <div class="lg:col-span-8">
+            <p class="eyebrow text-brand">Hanover exclusively</p>
+            <h1 class="mt-6 max-w-4xl font-display text-5xl font-bold leading-[0.86] tracking-[-0.055em] text-white sm:text-7xl lg:text-[8.3rem]">Unyielding against <span class="text-ice">snow.</span></h1>
+            <p class="mt-8 max-w-xl text-base leading-7 text-snow-100/80 sm:text-lg">Local crews for residential clearing, commercial routes, ice management, and priority winter access across Hanover.</p>
+            <div class="mt-9 flex flex-col gap-3 sm:flex-row"><a href="#contact" class="button button-brand">Secure your spot <span aria-hidden="true">→</span></a><a href="tel:+16474500225" class="button button-glass">☎ Call now</a></div>
+          </div>
+          <aside class="weather-card lg:col-span-4" aria-live="polite" data-weather-widget>
+            <p class="eyebrow text-brand">Live Hanover</p>
+            <div class="mt-3 flex items-end gap-3"><strong class="font-display text-5xl text-white" data-weather-current>—</strong><span class="mb-2 text-sm text-white/60" data-weather-condition>Loading conditions</span></div>
+            <div class="mt-5 grid grid-cols-3 gap-3 border-t border-white/10 pt-5" data-weather-forecast><span class="text-xs text-white/50">Checking forecast…</span></div>
+            <p class="mt-4 hidden text-xs text-white/60" data-weather-fallback>Weather temporarily unavailable. Our dispatch team is still available by phone.</p>
+          </aside>
+        </div>
+      </section>
+
+      <section class="trust-strip" aria-label="Snow Pros service commitments"><div class="mx-auto grid max-w-7xl gap-5 px-5 py-7 text-center sm:grid-cols-3 lg:px-8"><p>✓ Fully insured</p><p>✓ WSIB compliant</p><p>✓ Locally owned</p></div></section>
+
+      <section id="weather-alert" class="hidden bg-brand px-5 py-3 text-center text-sm font-bold text-white" data-weather-alert><span>⚠ Freezing conditions in Hanover. Priority dispatch is active.</span> <a href="#contact" class="underline underline-offset-4">Request service now</a></section>
+
+      <section id="services" class="section-shell section-snow">
+        <div class="mx-auto max-w-7xl px-5 lg:px-8"><p class="eyebrow text-brand">Excellence in service</p><h2 class="section-title">Complete winter <span class="text-brand">protection.</span></h2>
+          <div class="mt-12 grid gap-6 md:grid-cols-3">
+            <article class="service-card"><span class="service-icon">▰</span><h3>Residential plowing</h3><p>Prompt driveway clearing and dependable routes for your winter plan.</p></article>
+            <article class="service-card"><span class="service-icon">◷</span><h3>Emergency response</h3><p>Priority clearing for urgent access, medical needs, and essential entryways.</p></article>
+            <article class="service-card"><span class="service-icon">✦</span><h3>Salting &amp; traction</h3><p>Concrete-safe ice management to help keep walkways and lots safer.</p></article>
+          </div>
+          <div class="faq-panel mt-16"><div><p class="eyebrow text-brand">Service policies</p><h3 class="mt-3 font-display text-3xl font-bold">Questions, answered clearly.</h3></div><div class="mt-8 divide-y divide-navy-900/10"><details><summary>How does the 2-inch trigger policy work?</summary><p>Service begins when accumulation reaches 2 inches at our Hanover dispatch center. Crews monitor local conditions and prepare for the event.</p></details><details><summary>Do I need to call when it snows?</summary><p>Scheduled clients are serviced automatically when their plan is activated. If you need urgent access, call us directly.</p></details><details><summary>How do I know the job was completed?</summary><p>Ask about the confirmation and photo-documentation options available for your service plan.</p></details></div></div>
+        </div>
+      </section>
+
+      <section id="gallery" class="section-shell bg-navy-950 text-white"><div class="mx-auto max-w-7xl px-5 lg:px-8"><div class="max-w-2xl"><p class="eyebrow text-brand">Hanover in action</p><h2 class="section-title text-white">Work that clears the way.</h2><p class="mt-5 text-white/70">A small look at the steady, practical work behind a safer winter property.</p></div>
+        <div class="mt-12 grid gap-5 md:grid-cols-2"><button class="gallery-card" data-gallery data-image="https://images.unsplash.com/photo-1491002052546-bf38f186af56?auto=format&fit=crop&q=85&w=1500" data-caption="Residential route preparation"><img src="https://images.unsplash.com/photo-1491002052546-bf38f186af56?auto=format&fit=crop&q=85&w=900" alt="Snow-covered residential street" loading="lazy"/><span>Residential route preparation <b>View image ↗</b></span></button><button class="gallery-card" data-gallery data-image="https://images.unsplash.com/photo-1483664852095-d6cc6870702d?auto=format&fit=crop&q=85&w=1500" data-caption="Commercial access clearing"><img src="https://images.unsplash.com/photo-1483664852095-d6cc6870702d?auto=format&fit=crop&q=85&w=900" alt="Snowy commercial street" loading="lazy"/><span>Commercial access clearing <b>View image ↗</b></span></button></div>
+        <div class="mt-12 grid gap-6 lg:grid-cols-2"><article class="info-card"><h3>Clear expectations</h3><p>We communicate the plan, clear the route, and help you know what happens next.</p></article><article class="info-card"><h3>Flexible service options</h3><p>Talk with the team about one-time response, seasonal service, and priority access needs.</p></article></div>
+      </div></section>
+
+      <section id="contact" class="section-shell section-contact"><div class="mx-auto grid max-w-7xl gap-12 px-5 lg:grid-cols-[0.82fr_1.18fr] lg:px-8"><div><p class="eyebrow text-brand">Get in touch</p><h2 class="section-title">Let us clear the <span class="text-brand">path.</span></h2><p class="mt-6 max-w-md leading-7 text-slate-600">Tell us what you need, or call for urgent access. We will respond with clear next steps.</p><dl class="mt-10 space-y-6"><div><dt>Call</dt><dd><a href="tel:+16474500225">(647) 450-0225</a></dd></div><div><dt>Email</dt><dd><a href="mailto:snowpros@contractor.net">snowpros@contractor.net</a></dd></div><div><dt>Service area</dt><dd>Hanover, Ontario</dd></div></dl><a class="mt-10 inline-flex text-sm font-bold text-brand underline underline-offset-4" href="mailto:snowpros@contractor.net?subject=SnowPros%20job%20application">Join our team →</a></div>
+        <form id="quote-form" class="quote-form" name="snow-pros-quote" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" novalidate>
+          <input type="hidden" name="form-name" value="snow-pros-quote" /><p class="hidden"><label>Do not fill this out if you are human <input name="bot-field" /></label></p>
+          <div class="flex items-center gap-3"><span class="grid h-10 w-10 place-items-center rounded-xl bg-brand/20 text-brand">✦</span><div><p class="eyebrow text-brand">Request a quote</p><h3 class="font-display text-2xl font-bold text-white">Start your service plan</h3></div></div>
+          <p id="form-status" class="mt-5 hidden rounded-lg px-4 py-3 text-sm" role="status" aria-live="polite"></p>
+          <div class="mt-8 grid gap-5 sm:grid-cols-2"><label>Your name<input name="name" autocomplete="name" minlength="2" required /></label><label>Contact phone<input name="phone" type="tel" autocomplete="tel" inputmode="tel" minlength="10" required /></label></div>
+          <label class="mt-5 block">Hanover address<input name="address" autocomplete="street-address" minlength="5" required /></label>
+          <fieldset class="mt-5"><legend>Priority level</legend><div class="mt-3 grid grid-cols-3 gap-3"><label class="choice"><input type="radio" name="serviceType" value="residential" checked />Residential</label><label class="choice"><input type="radio" name="serviceType" value="commercial" />Commercial</label><label class="choice"><input type="radio" name="serviceType" value="emergency" />Emergency</label></div></fieldset>
+          <label class="mt-5 block">Special requirements<textarea name="details" rows="4" placeholder="Gate code, route notes, or access needs"></textarea></label>
+          <button class="button button-brand mt-7 w-full" type="submit">Confirm quote request <span aria-hidden="true">→</span></button><a class="button button-outline mt-3 w-full" href="mailto:snowpros@contractor.net">Prefer email? Open mail app</a>
+        </form>
+      </div></section>
+    </main>
+
+    <footer class="bg-navy-950 px-5 py-12 text-white/70"><div class="mx-auto flex max-w-7xl flex-col gap-6 sm:flex-row sm:items-end sm:justify-between lg:px-3"><div><p class="font-display text-2xl font-bold text-white">SNOW<span class="text-brand">PROS</span></p><p class="mt-2 text-sm">Hanover, Ontario · Winter service with clear communication.</p></div><div class="flex gap-5 text-sm"><button data-dialog-open="privacy">Privacy</button><button data-dialog-open="terms">Terms</button><button data-back-to-top>Back to top ↑</button></div></div></footer>
+
+    <div class="consent-banner" data-consent hidden><p>We store one local preference to remember this notice. No analytics cookies are used.</p><div><button class="button button-brand" data-consent-choice="accepted">Accept</button><button class="button button-outline-light" data-consent-choice="declined">Decline</button></div></div>
+    <dialog class="site-dialog" data-dialog="privacy"><button class="dialog-close" data-dialog-close aria-label="Close privacy notice">×</button><h2>Privacy</h2><p>Contact details are used to respond to your request. This website does not send form details to browser error monitoring.</p></dialog>
+    <dialog class="site-dialog" data-dialog="terms"><button class="dialog-close" data-dialog-close aria-label="Close terms">×</button><h2>Terms</h2><p>Service availability, timing, and pricing are confirmed by the Snow Pros Hanover team after a request is reviewed.</p></dialog>
+    <dialog class="site-dialog image-dialog" data-gallery-dialog><button class="dialog-close" data-gallery-close aria-label="Close image">×</button><img src="" alt="" data-gallery-image /><p data-gallery-caption></p></dialog>
+    <form name="snow-pros-quote" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" hidden><input type="hidden" name="form-name" value="snow-pros-quote" /><input name="bot-field" /></form>
+    <script type="module" src="/src/main.js"></script>
   </body>
 </html>

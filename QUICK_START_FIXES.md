@@ -125,7 +125,7 @@ npm run dev
 **Create**: `netlify/functions/weather.js`
 ```javascript
 exports.handler = async (event) => {
-  const apiKey = process.env.VITE_WEATHER_API_KEY;
+  const apiKey = process.env.OPENWEATHERMAP_API_KEY;
   
   if (!apiKey) {
     return {
@@ -332,8 +332,8 @@ Sitemap: https://snowproshanover.com/sitemap.xml
 
 ### ✅ Phase 1 Verification
 ```bash
-npm run build
-# ✅ No TypeScript errors
+npm run verify
+# ✅ Lint, strict TypeScript, automated tests, and production build pass
 # ✅ No warnings
 
 npm run dev
@@ -522,7 +522,7 @@ Before pushing to production:
 
 ```bash
 # Build and test
-npm run build          # ✅ No errors
+npm run verify         # ✅ Lint, types, tests, and production build pass
 npm run preview        # ✅ Test locally
 
 # Verify critical fixes

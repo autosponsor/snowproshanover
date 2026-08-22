@@ -59,6 +59,23 @@
   .info-card { @apply rounded-[2rem] border border-white/10 bg-white/5 p-7 backdrop-blur-sm; }
   .info-card h3 { @apply font-display text-2xl font-bold; }
   .info-card p { @apply mt-3 leading-7 text-white/65; }
+  .section-process { @apply bg-white; }
+  .process-grid { @apply grid gap-5 sm:grid-cols-2 xl:grid-cols-4; }
+  .process-card { @apply relative overflow-hidden rounded-[2rem] border border-slate-200 bg-snow-50 p-7 shadow-sm; }
+  .process-number { @apply text-xs font-black tracking-[0.25em] text-brand; }
+  .process-card h3 { @apply mt-7 font-display text-2xl font-bold text-navy-900; }
+  .process-card p { @apply mt-4 leading-7 text-slate-600; }
+  .process-card a { @apply break-all font-bold text-brand underline decoration-brand/40 underline-offset-4 hover:decoration-brand; }
+  .process-proof { @apply overflow-hidden rounded-[2rem] bg-navy-950 text-white shadow-2xl lg:grid lg:grid-cols-2; }
+  .process-image { @apply relative min-h-72; }
+  .process-image img { @apply absolute inset-0 h-full w-full object-cover; }
+  .process-image figcaption { @apply absolute inset-x-0 bottom-0 bg-navy-950/75 px-5 py-4 text-xs text-white/75 backdrop-blur-sm; }
+  .process-proof-copy { @apply p-8 sm:p-10; }
+  .process-proof-copy h3 { @apply mt-4 font-display text-3xl font-bold; }
+  .process-proof-copy > p:not(.eyebrow) { @apply mt-5 max-w-md leading-7 text-white/70; }
+  .profile-links { @apply mt-8 flex flex-col gap-3 sm:flex-row; }
+  .profile-link { @apply inline-flex items-center justify-between gap-3 rounded-xl border border-white/20 px-5 py-4 text-xs font-black uppercase tracking-[0.12em] text-white transition hover:border-brand hover:bg-white/10; }
+  .gallery-image-position-top { object-position: center 35%; }
   .section-contact { @apply bg-snow-50; }
   dl dt { @apply text-[0.65rem] font-black uppercase tracking-[0.22em] text-brand; }
   dl dd { @apply mt-1 font-display text-xl font-bold text-navy-900; }

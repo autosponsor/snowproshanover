@@ -1,0 +1,28 @@
+{
+  "name": "snow-pros-hanover",
+  "private": true,
+  "version": "1.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint .",
+    "test:unit": "vitest run tests/unit",
+    "test:e2e": "playwright test",
+    "test": "npm run test:unit && npm run test:e2e",
+    "audit:prod": "npm audit --omit=dev --audit-level=high",
+    "check:bundle": "node scripts/check-bundle-size.mjs",
+    "verify": "npm run lint && npm run test:unit && npm run test:e2e && npm run build && npm run check:bundle && npm run audit:prod"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.5",
+    "@playwright/test": "^1.62.1",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9.39.5",
+    "postcss": "^8.5.26",
+    "tailwindcss": "^3.4.17",
+    "vite": "^8.2.1",
+    "vitest": "^4.1.10"
+  }
+}

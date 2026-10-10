@@ -1,0 +1,81 @@
+{
+  "name": "Snow Pros Hanover - Professional Snow Removal",
+  "short_name": "SnowPros Hanover",
+  "description": "Professional snow removal and winter property maintenance services in Hanover, Ontario",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#f97316",
+  "background_color": "#ffffff",
+  "categories": ["business", "service"],
+  "screenshots": [
+    {
+      "src": "/images/screenshot-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "/images/screenshot-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
+  ],
+  "icons": [
+    {
+      "src": "/images/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/images/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Request Quote",
+      "short_name": "Quote",
+      "description": "Request a snow removal quote",
+      "url": "/?ref=app_menu&action=quote",
+      "icons": [
+        {
+          "src": "/images/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Call Now",
+      "short_name": "Call",
+      "description": "Call our 24/7 dispatch line",
+      "url": "tel:+16474500225",
+      "icons": [
+        {
+          "src": "/images/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "prefer_related_applications": false
+}
